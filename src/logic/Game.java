@@ -10,6 +10,8 @@ public class Game {
     private List<Player> players;
     private Deck deck;
     private Player leadsNextTrick;
+    private Player pickedTrumpSuit;
+
 
     private static Scanner scanner = new Scanner(System.in);
 
@@ -42,7 +44,7 @@ public class Game {
 
         printPlayersHands();
 
-        chooseTrumpSuit();
+        pickTrumpSuit();
         dealRestOfCards();
 
 
@@ -54,7 +56,7 @@ public class Game {
             playHand();
         }
 
-        // calculateScore();
+         calculateScore();
 
         for (Player player : players) {
             System.out.println(player.getScore());
@@ -122,7 +124,7 @@ public class Game {
      * If nobody wants the top card, in the second round each player
      * takes turn to say a custom trump suit or pass.
      */
-    private void chooseTrumpSuit() {
+    private void pickTrumpSuit() {
 
         // first round of bidding: accepting/passing the top card
         Card topCard = deck.peekCard();
@@ -130,7 +132,7 @@ public class Game {
 
         // handles the "abizon" case: when the JACK is the top card, the next player MUST play in it
         if (topCard.getRank() == Rank.JACK) {
-            players.get(0).setChoseTrumpSuit(true);
+            pickedTrumpSuit = players.get(0);
             leadsNextTrick = players.get(0);
             deck.setTrumpSuit(topCard.getSuit());
             System.out.println("ABIZON");
@@ -145,7 +147,7 @@ public class Game {
             String action = scanner.nextLine().toLowerCase();
             if (action.equals("a")) {
                 System.out.println(player.getName() + " accepted the card. The trump suit is " + topCard.suitToString().toUpperCase());
-                player.setChoseTrumpSuit(true);
+                pickedTrumpSuit = player;
                 leadsNextTrick = player;
                 player.addCard(deck.dealCard());
                 deck.setTrumpSuit(topCardSuit);
@@ -165,7 +167,7 @@ public class Game {
             for (Suit suit : Suit.VALUES) {
                 if (suit.getName().equals(suitChoiceOrInvalid) // if the user entered a suit name
                         && suit != topCardSuit) { // it's not the top card's suit
-                    player.setChoseTrumpSuit(true);
+                    pickedTrumpSuit = player;
                     leadsNextTrick = player;
                     deck.setTrumpSuit(suit);
                     return;
@@ -251,49 +253,41 @@ public class Game {
     }
 
 
+    /**
+     * Calculates the match points collected by every player.
+     * EXCEPTION: the player who chose the trump suit (his score
+     * is the residual up to 16). If his score is not the highest/equal to
+     * the highest score, his match points go to the player with the highest
+     * score and his BT counter increases by one.
+     */
     private void calculateScore() {
-        Map<Player, Integer> playersMatchPoints = new HashMap<>();
+        List<Player> playersSortedByMatchPoints = new ArrayList<>(players);
+        playersSortedByMatchPoints.sort(Comparator.comparingInt(Player::getMatchPoints));
 
+        int totalGameScoreWithoutTrumpSuitChooser = 0;
         for (Player player : players) {
-            playersMatchPoints.put(player, player.getMatchPoints());
-        }
-
-        Player ownerOfTheGame = null;
-        for (Player player : players) {
-            if (player.choseTrumpSuit()) {
-                ownerOfTheGame = player;
+            if (player != pickedTrumpSuit) {
+                player.increaseScore();
+                totalGameScoreWithoutTrumpSuitChooser += player.getMatchPoints();
             }
         }
 
-        int highestMatchPoints = Collections.max(playersMatchPoints.values());
-        int ownerOfTheGameMatchPoints = playersMatchPoints.get(ownerOfTheGame);
-        boolean bt = ownerOfTheGameMatchPoints < highestMatchPoints;
+        int trumpSuitChooserScore = 16 - totalGameScoreWithoutTrumpSuitChooser;
+        Player playerWithHighestScore = Collections.max(playersSortedByMatchPoints);
 
-        if (bt) {
-            ownerOfTheGame.addOneBT();
-            playersMatchPoints.remove(ownerOfTheGame);
-            // TODO improve the way match points are distributed in case of BT
-            for (Player player : players) {
-                if (playersMatchPoints.get(player) == highestMatchPoints) {
-                    player.increaseScore(ownerOfTheGame.getMatchPoints());
-                    break;
-                }
-            }
-        }
-
-        Collections.sort(players, (Player p1, Player p2) -> Integer.compare(p1.getMatchPoints(), p2.getMatchPoints()));
-
-        for (Player player : players) {
-            player.increaseScore(player.getMatchPoints());
+        // TODO divide the match points of the trump suit chooser evenly among the players with a equal highest score
+        if (trumpSuitChooserScore < playerWithHighestScore.getMatchPoints()) { // the player who picked trump doesn't have the highest score
+            pickedTrumpSuit.incrementBT();
+            playerWithHighestScore.increaseScore(trumpSuitChooserScore); // the player with the largest score get's the other's match points
+        } else {
+            pickedTrumpSuit.increaseScore(trumpSuitChooserScore);
         }
     }
 
 
 
     private void resetOwnerOfTheGame() {
-        for (Player player : players) {
-            player.setChoseTrumpSuit(false);
-        }
+        pickedTrumpSuit = null;
     }
 
     private void printPlayersHands() {

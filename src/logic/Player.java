@@ -26,11 +26,11 @@ public class Player implements Comparable<Player> {
      * True if player is the dealer in the current round
      */
     private boolean isDealer;
-
-    /**
-     * True if player chose the trump suit of the game round
-     */
-    private boolean choseTrumpSuit;
+//
+//    /**
+//     * True if player pick the trump suit of the game round
+//     */
+//    private boolean pickedTrumpSuit;
 
     /**
      * List of player's cards in the current round
@@ -74,11 +74,20 @@ public class Player implements Comparable<Player> {
 
 
     /**
-     * Increases the current game score
-     * @param score match points accumulated in the current round
+     * Increases the current game score with the number of match points given
+     * @param score an int representing the match points
      */
     public void increaseScore(int score) {
         this.score += score;
+    }
+
+
+    /**
+     * Increases the current game score with the number of match points accumulated
+     * in the current game
+     */
+    public void increaseScore() {
+        score += getMatchPoints();
     }
 
 
@@ -98,31 +107,31 @@ public class Player implements Comparable<Player> {
     public void setDealer(boolean dealer) {
         isDealer = dealer;
     }
-
-
-    /**
-     * Returns true if player chose the trump suit in the current round
-     * @return true i player chose the trump suit
-     */
-    public boolean choseTrumpSuit() {
-        return choseTrumpSuit;
-    }
-
-
-    /**
-     * Records the fact that player chose the trump suit of the round
-     * @param choseTrumpSuit true if player chose the trump suit
-     */
-    public void setChoseTrumpSuit(boolean choseTrumpSuit) {
-        this.choseTrumpSuit = choseTrumpSuit;
-    }
+//
+//
+//    /**
+//     * Returns true if player chose the trump suit in the current round
+//     * @return true i player chose the trump suit
+//     */
+//    public boolean pickedTrumpSuit() {
+//        return pickedTrumpSuit;
+//    }
+//
+//
+//    /**
+//     * Records the fact that player chose the trump suit of the round
+//     * @param pickedTrumpSuit true if player chose the trump suit
+//     */
+//    public void setPickedTrumpSuit(boolean pickedTrumpSuit) {
+//        this.pickedTrumpSuit = pickedTrumpSuit;
+//    }
 
 
     /**
      * Adds one BT to the player. If BT count reaches 3, the score is
      * decreased by 10, and the BT count is zeroed.
      */
-    public void addOneBT() {
+    public void incrementBT() {
         if (++bt == 3) {
             score -= 10;
             bt = 0;
