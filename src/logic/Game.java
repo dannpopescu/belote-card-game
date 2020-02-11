@@ -6,20 +6,20 @@ import ui.HandTableGenerator;
 import java.util.*;
 
 public class Game {
-    private int numberOfPlayers;
-    private Deque<Player> playersInDealingOrder;
+    private int playersLastIndex;
+    private List<Player> players;
     private Deck deck;
     private Player playsFirstNextHand;
 
     private static Scanner scanner = new Scanner(System.in);
 
     public Game(List<String> playerNames) {
-        this.numberOfPlayers = playerNames.size();
+        this.playersLastIndex = playerNames.size() - 1;
         this.deck = new Deck();
-        this.playersInDealingOrder = new LinkedList<>();
+        this.players = new LinkedList<>();
 
         for (String playerName : playerNames) {
-            playersInDealingOrder.add(new Player(playerName));
+            players.add(new Player(playerName));
         }
     }
 
@@ -34,7 +34,7 @@ public class Game {
 
     private void playRound() {
         resetDealer(); // dealer is the last player in the players deque
-        System.out.println("The dealer is " + playersInDealingOrder.peekLast());
+        System.out.println("The dealer is " + players.get(playersLastIndex));
 
         resetOwnerOfTheGame();
 
@@ -56,11 +56,11 @@ public class Game {
 
         // calculateScore();
 
-        for (Player player : playersInDealingOrder) {
+        for (Player player : players) {
             System.out.println(player.getScore());
         }
 
-        for (Player player : playersInDealingOrder) {
+        for (Player player : players) {
             player.discardHand();
         }
     }
@@ -101,13 +101,13 @@ public class Game {
         deck.restoreDeck();
         deck.shuffle();
 
-        for (Player player : playersInDealingOrder) {
+        for (Player player : players) {
             for (int i = 0; i < 3; i++) {
                 player.addCard(deck.dealCard());
             }
         }
 
-        for (Player player : playersInDealingOrder) {
+        for (Player player : players) {
             for (int i = 0; i < 2; i++) {
                 player.addCard(deck.dealCard());
             }
@@ -130,8 +130,8 @@ public class Game {
 
         // handles the "abizon" case: when the JACK is the top card, the next player MUST play in it
         if (topCard.getRank() == Rank.JACK) {
-            playersInDealingOrder.peekFirst().setOwnsTheGame(true);
-            playsFirstNextHand = playersInDealingOrder.peekFirst();
+            players.get(0).setOwnsTheGame(true);
+            playsFirstNextHand = players.get(0);
             deck.setTrumpSuit(topCard.getSuit());
             System.out.println("ABIZON");
             return;
@@ -140,7 +140,7 @@ public class Game {
         System.out.println("Top card: " + topCard);
         System.out.println("[P]ass or [A]ccept?");
 
-        for (Player player : playersInDealingOrder) {
+        for (Player player : players) {
             System.out.print(player.getName() + ": ");
             String action = scanner.nextLine().toLowerCase();
             if (action.equals("a")) {
@@ -154,11 +154,11 @@ public class Game {
         }
 
         // the dealer receives the top card if no one takes it in the first round of bidding
-        playersInDealingOrder.peekLast().addCard(deck.dealCard());
+        players.get(playersLastIndex).addCard(deck.dealCard());
 
         // second round of bidding: choosing a trump suit or passing
         System.out.println("[P]ass or select a trump suite?");
-        for (Player player : playersInDealingOrder) {
+        for (Player player : players) {
             System.out.print(player.getName() + ": ");
             String suitChoiceOrInvalid = scanner.nextLine().toLowerCase();
 
@@ -176,7 +176,7 @@ public class Game {
 
 
     private void dealRestOfCards() {
-        for (Player player : playersInDealingOrder) {
+        for (Player player : players) {
             // the player who took the top card will have 6 cards, while the rest only 5
             int cardsToDeal = player.getHandSize() == 6 ? 2 : 3;
             for (int i = 0; i < cardsToDeal; i++) {
@@ -204,7 +204,7 @@ public class Game {
 
 
     private List<Player> getPlayingOrder() {
-        List<Player> dealingOrder = new LinkedList<>(playersInDealingOrder);
+        List<Player> dealingOrder = new LinkedList<>(players);
 
         if (playsFirstNextHand == dealingOrder.get(0)) {
             return dealingOrder;
@@ -226,7 +226,7 @@ public class Game {
      * additionally the SEVEN's and EIGHT's.
      */
     private void populateDeck() {
-        if (numberOfPlayers == 4) {
+        if (players.size() == 4) {
             Rank.setValuesForFourPlayers();
         }
 
@@ -242,11 +242,11 @@ public class Game {
      * Moves the first player to the end and makes him the dealer of the game.
      */
     private void resetDealer() {
-        if (!playersInDealingOrder.isEmpty()) {
-            playersInDealingOrder.peekLast().setDealer(false);
-            playersInDealingOrder.addLast(playersInDealingOrder.removeFirst());
-            assert playersInDealingOrder.peekLast() != null;
-            playersInDealingOrder.peekLast().setDealer(true);
+        if (!players.isEmpty()) {
+            players.get(playersLastIndex).setDealer(false);
+            players.add(players.remove(0));
+            assert players.get(playersLastIndex) != null;
+            players.get(playersLastIndex).setDealer(true);
         }
     }
 
@@ -254,12 +254,12 @@ public class Game {
     private void calculateScore() {
         Map<Player, Integer> playersMatchPoints = new HashMap<>();
 
-        for (Player player : playersInDealingOrder) {
+        for (Player player : players) {
             playersMatchPoints.put(player, player.getMatchPoints());
         }
 
         Player ownerOfTheGame = null;
-        for (Player player : playersInDealingOrder) {
+        for (Player player : players) {
             if (player.ownsTheGame()) {
                 ownerOfTheGame = player;
             }
@@ -273,7 +273,7 @@ public class Game {
             ownerOfTheGame.addOneBT();
             playersMatchPoints.remove(ownerOfTheGame);
             // TODO improve the way match points are distributed in case of BT
-            for (Player player : playersInDealingOrder) {
+            for (Player player : players) {
                 if (playersMatchPoints.get(player) == highestMatchPoints) {
                     player.addToScore(ownerOfTheGame.getMatchPoints());
                     break;
@@ -281,7 +281,9 @@ public class Game {
             }
         }
 
-        for (Player player : playersInDealingOrder) {
+        Collections.sort(players, (Player p1, Player p2) -> Integer.compare(p1.getMatchPoints(), p2.getMatchPoints()));
+
+        for (Player player : players) {
             player.addToScore(player.getMatchPoints());
         }
     }
@@ -289,17 +291,17 @@ public class Game {
 
 
     private void resetOwnerOfTheGame() {
-        for (Player player : playersInDealingOrder) {
+        for (Player player : players) {
             player.setOwnsTheGame(false);
         }
     }
 
     private void printPlayersHands() {
-        HandTableGenerator.generateTable(playersInDealingOrder);
+        HandTableGenerator.generateTable(players);
     }
 
     private void printCollectedCards() {
-        CollectedCardsTableGenerator.generateTable(playersInDealingOrder);
+        CollectedCardsTableGenerator.generateTable(players);
     }
 
 }

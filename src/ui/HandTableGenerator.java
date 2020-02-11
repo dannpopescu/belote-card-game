@@ -3,10 +3,11 @@ package ui;
 import logic.Player;
 
 import java.util.Deque;
+import java.util.List;
 
 public class HandTableGenerator {
 
-    public static void generateTable(Deque<Player> players) {
+    public static void generateTable(List<Player> players) {
         generateRowDelimiter(players.size());
 
         for (Player player : players) {

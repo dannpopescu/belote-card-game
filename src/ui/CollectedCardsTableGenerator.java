@@ -3,10 +3,11 @@ package ui;
 import logic.Player;
 
 import java.util.Deque;
+import java.util.List;
 
 public class CollectedCardsTableGenerator {
 
-    public static void generateTable(Deque<Player> players) {
+    public static void generateTable(List<Player> players) {
         System.out.println("+--------------------------------------------------------------------------------+");
 
         for (Player player : players) {

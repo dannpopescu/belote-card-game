@@ -2,14 +2,14 @@ package logic;
 
 import java.util.*;
 
-public class Player {
+public class Player implements Comparable<Player> {
     private String name;
     private int score;
     private int bt;
     private boolean isDealer;
     private boolean ownsTheGame;
-    private Set<Card> collectedCards;
     private List<Card> hand;
+    private Set<Card> collectedCards;
 
     public Player(String name) {
         this.name = name;
@@ -125,6 +125,11 @@ public class Player {
         }
 
         return matchPoints;
+    }
+
+    @Override
+    public int compareTo(Player o) {
+        return Integer.compare(score, o.score);
     }
 
     @Override
