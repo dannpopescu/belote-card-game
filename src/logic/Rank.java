@@ -134,4 +134,8 @@ public class Rank implements Comparable<Rank> {
         return Integer.compare(VALUES.indexOf(this), VALUES.indexOf(o));
     }
 
+    public void create() {
+        System.out.println("hello");
+    }
+
 }
