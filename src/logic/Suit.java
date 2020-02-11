@@ -1,46 +1,17 @@
-// Suit.java - John K. Estell - 8 May 2003
-// last modified: 23 Febraury 2004
-// Implementation of the "suit" value for a playing card.
-
 package logic;
 
-import java.util.*;
+public enum Suit {
+    CLUBS("c", '\u2663'),
+    DIAMONDS("d", '\u2666'),
+    HEARTS("h", '\u2665'),
+    SPADES("s", '\u2660');
 
-
-/**
- * Specification of the suit values for a standard deck of cards.
- */
-public final class Suit implements Comparable<Suit> {
-    private String name;
-    private String fileSymbol;
-    private char unicodeSymbol;
+    private final String fileSymbol;
+    private final char unicodeSymbol;
     private boolean isTrump;
 
-    /**
-     * The suit clubs.
-     */
-    public static final Suit CLUBS = new Suit("clubs", "c", '\u2663');
-    /**
-     * The suit diamonds.
-     */
-    public static final Suit DIAMONDS = new Suit("diamonds", "d", '\u2666');
-    /**
-     * The suit hearts.
-     */
-    public static final Suit HEARTS = new Suit("hearts", "h", '\u2665');
-    /**
-     * The suit spades.
-     */
-    public static final Suit SPADES = new Suit("spades", "s", '\u2660');
 
-    /**
-     * List of all suit values.  Primarily for use with iteration.
-     */
-    public static final List<Suit> VALUES = List.of(CLUBS, DIAMONDS, HEARTS, SPADES);
-
-
-    private Suit(String name, String fileSymbol, char unicodeSymbol) {
-        this.name = name;
+    Suit(String fileSymbol, char unicodeSymbol) {
         this.fileSymbol = fileSymbol;
         this.unicodeSymbol = unicodeSymbol;
         this.isTrump = false;
@@ -48,11 +19,11 @@ public final class Suit implements Comparable<Suit> {
 
 
     /**
-     * Clears the trump suit of the previous game and
-     * sets the trump suit of the current game.
+     * Clears the trump suit of the previous game and sets
+     * the trump suit of the current game.
      */
     public void setTrump() {
-        for (Suit suit : VALUES) {
+        for (Suit suit : Suit.values()) {
             suit.isTrump = false;
         }
         isTrump = true;
@@ -60,19 +31,10 @@ public final class Suit implements Comparable<Suit> {
 
 
     /**
-     * Returns true if the suit is the current trump
+     * Returns true if the suit is the current trump suit.
      */
     public boolean isTrump() {
         return isTrump;
-    }
-
-
-    /**
-     *  Returns a description of this suit.
-     *  @return the name of the suit.
-     */
-    public String getName() {
-        return name;
     }
 
 
@@ -94,26 +56,4 @@ public final class Suit implements Comparable<Suit> {
     public char getUnicodeSymbol() {
         return unicodeSymbol;
     }
-
-
-    /**
-     * Returns a description of this suit.
-     * @return the name of this suit.
-     */
-    public String toString() {
-        return name;
-    }
-
-
-    /**
-     *  Compares the suits. Used for the purpose of choosing the winner card.
-     *  @param o the other suit.
-     *  @return < 0 if the other suit is trump and this is not, 0 if the suits
-     *  are both trump or both non-trump, or > 0 if this suit is trump and the other is not.
-     */
-    @Override
-    public int compareTo(Suit o) {
-        return Boolean.compare(isTrump, o.isTrump);
-    }
 }
-

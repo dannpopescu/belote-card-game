@@ -164,8 +164,8 @@ public class Game {
             System.out.print(player.getName() + ": ");
             String suitChoiceOrInvalid = scanner.nextLine().toLowerCase();
 
-            for (Suit suit : Suit.VALUES) {
-                if (suit.getName().equals(suitChoiceOrInvalid) // if the user entered a suit name
+            for (Suit suit : Suit.values()) {
+                if (suit.name().toLowerCase().equals(suitChoiceOrInvalid) // if the user entered a suit name
                         && suit != topCardSuit) { // it's not the top card's suit
                     pickedTrumpSuit = player;
                     leadsNextTrick = player;
@@ -233,7 +233,7 @@ public class Game {
         }
 
         for (Rank r : Rank.VALUES) {
-            for (Suit s : Suit.VALUES) {
+            for (Suit s : Suit.values()) {
                 deck.addCard(new Card(s, r));
             }
         }
@@ -267,6 +267,10 @@ public class Game {
         int totalGameScoreWithoutTrumpSuitChooser = 0;
         for (Player player : players) {
             if (player != pickedTrumpSuit) {
+                if (player.getMatchPoints() < 1) {
+                    player.increaseScore(-10);
+                    continue;
+                }
                 player.increaseScore();
                 totalGameScoreWithoutTrumpSuitChooser += player.getMatchPoints();
             }

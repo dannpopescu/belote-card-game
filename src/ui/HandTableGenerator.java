@@ -2,7 +2,6 @@ package ui;
 
 import logic.Player;
 
-import java.util.Deque;
 import java.util.List;
 
 public class HandTableGenerator {
