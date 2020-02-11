@@ -58,7 +58,7 @@ public class HandTableGenerator {
 
     private static void generatePlayerCardsCell(Player player) {
         System.out.print("| ");
-        String cards = player.getHand().toStringForTableGenerator();
+        String cards = player.handToStringForTable();
 
         System.out.print(cards);
 
@@ -72,11 +72,11 @@ public class HandTableGenerator {
     private static void generateCardsIndexesCell(Player player) {
         System.out.print("| ");
 
-        for (int i = 0; i < player.getHand().getNumberOfCards(); i++) {
+        for (int i = 0; i < player.getHandSize(); i++) {
             System.out.print(i + "   ");
         }
 
-        int numberOfTrailingWhiteSpaces = 40 - player.getHand().toStringForTableGenerator().length() - 1;
+        int numberOfTrailingWhiteSpaces = 40 - player.handToStringForTable().length() - 1;
 
         for (int i = 0; i < numberOfTrailingWhiteSpaces; i++) {
             System.out.print(" ");

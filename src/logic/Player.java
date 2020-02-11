@@ -5,17 +5,16 @@ import java.util.*;
 public class Player {
     private String name;
     private int score;
-    private Hand hand;
     private int bt;
     private boolean isDealer;
     private boolean ownsTheGame;
     private Set<Card> collectedCards;
-    private List<Card> handCards;
+    private List<Card> hand;
 
     public Player(String name) {
         this.name = name;
         this.score = 0;
-        this.hand = new Hand();
+        this.hand = new ArrayList<>();
         this.collectedCards = new HashSet<>();
     }
 
@@ -55,8 +54,52 @@ public class Player {
         this.ownsTheGame = ownsTheGame;
     }
 
-    public Hand getHand() {
-        return hand;
+    public void addCard(Card card) {
+        hand.add(card);
+    }
+
+    public Card getCard(int index) {
+        return hand.get(index);
+    }
+
+    public Card removeCard(Card card) {
+        if (hand.remove(card)) {
+            return card;
+        } else {
+            return null;
+        }
+    }
+
+    public Card removeCard(int index) {
+        try {
+            return hand.remove(index);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    public void discardHand() {
+        hand.clear();
+    }
+
+    public int getHandSize() {
+        return hand.size();
+    }
+
+    public boolean isHandEmpty() {
+        return hand.isEmpty();
+    }
+
+    public boolean handContainsCard(Card card) {
+        return hand.contains(card);
+    }
+
+    public String handToStringForTable() {
+        StringBuilder sb = new StringBuilder();
+        for (Card card : hand) {
+            sb.append(card).append(", ");
+        }
+        return sb.toString();
     }
 
     public void addCollectedCards(Set<Card> cardsCollected) {

@@ -54,14 +54,14 @@ public class Game {
             playHand();
         }
 
-        calculateScore();
+        // calculateScore();
 
         for (Player player : playersInDealingOrder) {
             System.out.println(player.getScore());
         }
 
         for (Player player : playersInDealingOrder) {
-            player.getHand().discardHand();
+            player.discardHand();
         }
     }
 
@@ -76,9 +76,9 @@ public class Game {
             System.out.print(player.getName() + ": ");
             int cardIndex = scanner.nextInt();
 
-            System.out.println(player.getHand().getCard(cardIndex));
+            System.out.println(player.getCard(cardIndex));
             scanner.nextLine();
-            cardsPlayed.put(player.getHand().removeCard(cardIndex), player);
+            cardsPlayed.put(player.removeCard(cardIndex), player);
         }
 
         Card strongestCard = Collections.max(cardsPlayed.keySet());
@@ -103,13 +103,13 @@ public class Game {
 
         for (Player player : playersInDealingOrder) {
             for (int i = 0; i < 3; i++) {
-                player.getHand().addCard(deck.dealCard());
+                player.addCard(deck.dealCard());
             }
         }
 
         for (Player player : playersInDealingOrder) {
             for (int i = 0; i < 2; i++) {
-                player.getHand().addCard(deck.dealCard());
+                player.addCard(deck.dealCard());
             }
         }
     }
@@ -147,14 +147,14 @@ public class Game {
                 System.out.println(player.getName() + " accepted the card. The trump suit is " + topCard.suitToString().toUpperCase());
                 player.setOwnsTheGame(true);
                 playsFirstNextHand = player;
-                player.getHand().addCard(deck.dealCard());
+                player.addCard(deck.dealCard());
                 deck.setTrumpSuit(topCardSuit);
                 return;
             }
         }
 
         // the dealer receives the top card if no one takes it in the first round of bidding
-        playersInDealingOrder.peekLast().getHand().addCard(deck.dealCard());
+        playersInDealingOrder.peekLast().addCard(deck.dealCard());
 
         // second round of bidding: choosing a trump suit or passing
         System.out.println("[P]ass or select a trump suite?");
@@ -178,9 +178,9 @@ public class Game {
     private void dealRestOfCards() {
         for (Player player : playersInDealingOrder) {
             // the player who took the top card will have 6 cards, while the rest only 5
-            int cardsToDeal = player.getHand().getNumberOfCards() == 6 ? 2 : 3;
+            int cardsToDeal = player.getHandSize() == 6 ? 2 : 3;
             for (int i = 0; i < cardsToDeal; i++) {
-                player.getHand().addCard(deck.dealCard());
+                player.addCard(deck.dealCard());
             }
         }
     }
