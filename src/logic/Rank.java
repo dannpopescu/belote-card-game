@@ -4,11 +4,11 @@ public enum Rank {
     SEVEN("7", 0),
     EIGHT("8", 0),
     NINE("9", 0),
-    TEN("t", 0),
-    JACK("j", 0),
-    QUEEN("q",0),
-    KING("k", 0),
-    ACE("a", 0);
+    TEN("t", 10),
+    JACK("j", 2),
+    QUEEN("q", 3),
+    KING("k", 4),
+    ACE("a", 11);
 
     private final String symbol;
     private final int defaultPoints;
