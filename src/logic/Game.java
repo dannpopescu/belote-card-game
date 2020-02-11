@@ -228,11 +228,14 @@ public class Game {
      * additionally the SEVEN's and EIGHT's.
      */
     private void populateDeck() {
+        EnumSet<Rank> rankRange;
         if (players.size() == 4) {
-            Rank.setValuesForFourPlayers();
+            rankRange = EnumSet.range(Rank.SEVEN, Rank.ACE);
+        } else {
+            rankRange = EnumSet.range(Rank.NINE, Rank.ACE);
         }
 
-        for (Rank r : Rank.VALUES) {
+        for (Rank r : rankRange) {
             for (Suit s : Suit.values()) {
                 deck.addCard(new Card(s, r));
             }
