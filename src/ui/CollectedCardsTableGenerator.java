@@ -2,7 +2,6 @@ package ui;
 
 import logic.Player;
 
-import java.util.Deque;
 import java.util.List;
 
 public class CollectedCardsTableGenerator {
@@ -12,7 +11,7 @@ public class CollectedCardsTableGenerator {
 
         for (Player player : players) {
             System.out.print("|");
-            String rowContent = " " + player.getName() + ": " + player.getCollectedCards();
+            String rowContent = " " + player.getName() + ": " + player.getWonTricks();
             System.out.print(rowContent);
 
             int whiteTrailingSpaces = 80 - rowContent.length();

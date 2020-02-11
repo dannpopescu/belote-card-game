@@ -9,7 +9,7 @@ public class Game {
     private int playersLastIndex;
     private List<Player> players;
     private Deck deck;
-    private Player playsFirstNextHand;
+    private Player leadsNextTrick;
 
     private static Scanner scanner = new Scanner(System.in);
 
@@ -85,9 +85,9 @@ public class Game {
 
         Player wonTheHand = cardsPlayed.get(strongestCard);
 
-        wonTheHand.addCollectedCards(cardsPlayed.keySet());
+        wonTheHand.addWonTrick(cardsPlayed.keySet());
 
-        playsFirstNextHand = wonTheHand;
+        leadsNextTrick = wonTheHand;
     }
 
 
@@ -130,8 +130,8 @@ public class Game {
 
         // handles the "abizon" case: when the JACK is the top card, the next player MUST play in it
         if (topCard.getRank() == Rank.JACK) {
-            players.get(0).setOwnsTheGame(true);
-            playsFirstNextHand = players.get(0);
+            players.get(0).setChoseTrumpSuit(true);
+            leadsNextTrick = players.get(0);
             deck.setTrumpSuit(topCard.getSuit());
             System.out.println("ABIZON");
             return;
@@ -145,8 +145,8 @@ public class Game {
             String action = scanner.nextLine().toLowerCase();
             if (action.equals("a")) {
                 System.out.println(player.getName() + " accepted the card. The trump suit is " + topCard.suitToString().toUpperCase());
-                player.setOwnsTheGame(true);
-                playsFirstNextHand = player;
+                player.setChoseTrumpSuit(true);
+                leadsNextTrick = player;
                 player.addCard(deck.dealCard());
                 deck.setTrumpSuit(topCardSuit);
                 return;
@@ -165,8 +165,8 @@ public class Game {
             for (Suit suit : Suit.VALUES) {
                 if (suit.getName().equals(suitChoiceOrInvalid) // if the user entered a suit name
                         && suit != topCardSuit) { // it's not the top card's suit
-                    player.setOwnsTheGame(true);
-                    playsFirstNextHand = player;
+                    player.setChoseTrumpSuit(true);
+                    leadsNextTrick = player;
                     deck.setTrumpSuit(suit);
                     return;
                 }
@@ -206,14 +206,14 @@ public class Game {
     private List<Player> getPlayingOrder() {
         List<Player> dealingOrder = new LinkedList<>(players);
 
-        if (playsFirstNextHand == dealingOrder.get(0)) {
+        if (leadsNextTrick == dealingOrder.get(0)) {
             return dealingOrder;
-        } else if (playsFirstNextHand == dealingOrder.get(1)) {
+        } else if (leadsNextTrick == dealingOrder.get(1)) {
             dealingOrder.add(dealingOrder.remove(0));
-        } else if (playsFirstNextHand == dealingOrder.get(2)) {
+        } else if (leadsNextTrick == dealingOrder.get(2)) {
             dealingOrder.add(dealingOrder.remove(0));
             dealingOrder.add(dealingOrder.remove(0));
-        } else if (playsFirstNextHand == dealingOrder.get(3)) {
+        } else if (leadsNextTrick == dealingOrder.get(3)) {
             dealingOrder.add(0, dealingOrder.remove(3));
         }
 
@@ -260,7 +260,7 @@ public class Game {
 
         Player ownerOfTheGame = null;
         for (Player player : players) {
-            if (player.ownsTheGame()) {
+            if (player.choseTrumpSuit()) {
                 ownerOfTheGame = player;
             }
         }
@@ -275,7 +275,7 @@ public class Game {
             // TODO improve the way match points are distributed in case of BT
             for (Player player : players) {
                 if (playersMatchPoints.get(player) == highestMatchPoints) {
-                    player.addToScore(ownerOfTheGame.getMatchPoints());
+                    player.increaseScore(ownerOfTheGame.getMatchPoints());
                     break;
                 }
             }
@@ -284,7 +284,7 @@ public class Game {
         Collections.sort(players, (Player p1, Player p2) -> Integer.compare(p1.getMatchPoints(), p2.getMatchPoints()));
 
         for (Player player : players) {
-            player.addToScore(player.getMatchPoints());
+            player.increaseScore(player.getMatchPoints());
         }
     }
 
@@ -292,7 +292,7 @@ public class Game {
 
     private void resetOwnerOfTheGame() {
         for (Player player : players) {
-            player.setOwnsTheGame(false);
+            player.setChoseTrumpSuit(false);
         }
     }
 
