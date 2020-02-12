@@ -1,9 +1,9 @@
 package com.danpopescu;
 
 import logic.deckofcards.Card;
-import logic.declarations.Declaration;
 import logic.deckofcards.Rank;
 import logic.deckofcards.Suit;
+import logic.declarations.SequenceOfCards;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class Main {
                 .collect(Collectors.toList());
 
 
-        List<Declaration> combinations = getSequenceOfCardsDeclarations(hand);
+        List<SequenceOfCards> combinations = getSequenceOfCardsDeclarations(hand);
 
 //        List<Rank> spades = filterRanks(hand, Suit.SPADES);
 //        List<Rank> clubs = filterRanks(hand, Suit.CLUBS);
@@ -62,7 +62,7 @@ public class Main {
 
     }
 
-    public static List<Declaration> getSequenceOfCardsDeclarations(List<Card> hand) {
+    public static List<SequenceOfCards> getSequenceOfCardsDeclarations(List<Card> hand) {
         List<List<Card>> validSequencesOfCards = new ArrayList<>();
 
         for (Suit suit : Suit.values()) {
@@ -79,7 +79,7 @@ public class Main {
         }
 
         return validSequencesOfCards.stream()
-                .map(Declaration::new)
+                .map(SequenceOfCards::new)
                 .collect(Collectors.toList());
     }
 

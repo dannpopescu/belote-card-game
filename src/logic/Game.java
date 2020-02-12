@@ -4,6 +4,7 @@ import logic.deckofcards.Card;
 import logic.deckofcards.Deck;
 import logic.deckofcards.Rank;
 import logic.deckofcards.Suit;
+import logic.declarations.DeclarationsFinder;
 import ui.CollectedCardsTableGenerator;
 import ui.HandTableGenerator;
 
@@ -56,9 +57,8 @@ public class Game {
         for (int i = 0; i < 8; i++) {
             printCollectedCards();
             printPlayersHands();
-            for (Player player : players) {
-                player.checkDeclarations();
-            }
+            printDeclarations();
+
             System.out.println(getPlayingOrder());
             playHand();
         }
@@ -310,6 +310,13 @@ public class Game {
 
     private void printCollectedCards() {
         CollectedCardsTableGenerator.generateTable(players);
+    }
+
+    private void printDeclarations() {
+        for (Player player : players) {
+            System.out.println(player.getName());
+            System.out.println(DeclarationsFinder.getDeclarations(player.getHand()));
+        }
     }
 
 }

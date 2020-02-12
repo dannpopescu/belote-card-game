@@ -252,32 +252,8 @@ public class Player implements Comparable<Player> {
 
 
     public void checkDeclarations() {
-//        hand.sort(Comparator.comparing(Card::getSuit).thenComparing(Card::getRank));
-
-//        Map<Rank, AtomicInteger> buckets = new HashMap<>();
-//
-//        for (Card card : hand) {
-//            buckets.putIfAbsent(card.getRank(), new AtomicInteger());
-//            buckets.get(card.getRank()).incrementAndGet();
-//        }
-
-        Map<Rank, Long> counting = hand.stream().collect(Collectors.groupingBy(Card::getRank, Collectors.counting()));
-
-        List<Rank> fours = counting.entrySet().stream()
-                .filter(e -> e.getValue() == 4)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
 
 
-
-//        if (buckets.containsValue(4)) {
-//            buckets.entrySet().stream().filter(entry ->)
-//        }
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
     }
 
 
@@ -316,5 +292,9 @@ public class Player implements Comparable<Player> {
             sb.append(card).append(", ");
         }
         return sb.toString();
+    }
+
+    public List<Card> getHand() {
+        return hand;
     }
 }
