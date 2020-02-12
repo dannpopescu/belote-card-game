@@ -1,5 +1,7 @@
 package logic;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Declaration {
@@ -45,5 +47,31 @@ public class Declaration {
                 new Card(Suit.DIAMONDS, rank),
                 new Card(Suit.CLUBS, rank),
                 new Card(Suit.HEARTS, rank));
+    }
+
+    public Declaration(List<Card> cards) {
+        this.cards = cards;
+        this.cards.sort(Comparator.comparing(Card::getRank));
+//        Collections.sort(this.cards);
+
+        switch (cards.size()) {
+            case 3:
+                this.name = "Tart";
+                this.points = 20;
+                break;
+            case 4:
+                this.name = "Jumatate de suta";
+                this.points = 50;
+                break;
+            case 5:
+                this.name = "O suta";
+                this.points = 100;
+                break;
+            case 6: case 7: case 8:
+                this.name = "O suta cincizeci";
+                this.points = 150;
+                break;
+        }
+
     }
 }
