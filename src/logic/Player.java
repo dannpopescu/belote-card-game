@@ -1,9 +1,10 @@
 package logic;
 
+import logic.deckofcards.Card;
+import logic.deckofcards.Rank;
+
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Player implements Comparable<Player> {
 

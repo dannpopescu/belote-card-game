@@ -1,4 +1,4 @@
-package logic;
+package logic.deckofcards;
 
 public class Card implements Comparable<Card> {
 

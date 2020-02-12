@@ -1,12 +1,11 @@
 package com.danpopescu;
 
-import logic.Card;
-import logic.Declaration;
-import logic.Rank;
-import logic.Suit;
+import logic.deckofcards.Card;
+import logic.declarations.Declaration;
+import logic.deckofcards.Rank;
+import logic.deckofcards.Suit;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

@@ -1,5 +1,9 @@
 package logic;
 
+import logic.deckofcards.Card;
+import logic.deckofcards.Deck;
+import logic.deckofcards.Rank;
+import logic.deckofcards.Suit;
 import ui.CollectedCardsTableGenerator;
 import ui.HandTableGenerator;
 

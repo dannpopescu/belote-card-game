@@ -1,4 +1,4 @@
-package logic;
+package logic.deckofcards;
 
 public enum Rank {
     SEVEN("7", 0),

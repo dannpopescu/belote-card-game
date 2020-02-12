@@ -2,7 +2,7 @@
 // last modified: 23 Febraury 2004
 // Implementation of a deck of playing cards.  Uses the Card class.
 
-package logic;
+package logic.deckofcards;
 
 import java.util.*;
 

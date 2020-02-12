@@ -1,4 +1,4 @@
-package logic;
+package logic.deckofcards;
 
 public enum Suit {
     CLUBS("c", '\u2663'),

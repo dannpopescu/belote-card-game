@@ -1,7 +1,6 @@
 package com.danpopescu;
 
 import logic.Game;
-import logic.Rank;
 
 import java.util.List;
 

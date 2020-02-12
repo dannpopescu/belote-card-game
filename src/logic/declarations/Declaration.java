@@ -1,6 +1,9 @@
-package logic;
+package logic.declarations;
 
-import java.util.Collections;
+import logic.deckofcards.Card;
+import logic.deckofcards.Rank;
+import logic.deckofcards.Suit;
+
 import java.util.Comparator;
 import java.util.List;
 
