@@ -1,6 +1,5 @@
 package logic;
 
-import java.util.Collections;
 import java.util.List;
 
 public class Declaration {

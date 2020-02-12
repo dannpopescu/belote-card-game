@@ -52,6 +52,9 @@ public class Game {
         for (int i = 0; i < 8; i++) {
             printCollectedCards();
             printPlayersHands();
+            for (Player player : players) {
+                player.checkDeclarations();
+            }
             System.out.println(getPlayingOrder());
             playHand();
         }
@@ -184,6 +187,7 @@ public class Game {
             for (int i = 0; i < cardsToDeal; i++) {
                 player.addCard(deck.dealCard());
             }
+            player.sortCards();
         }
     }
 
@@ -290,7 +294,6 @@ public class Game {
             pickedTrumpSuit.increaseScore(trumpSuitChooserScore);
         }
     }
-
 
 
     private void resetOwnerOfTheGame() {
