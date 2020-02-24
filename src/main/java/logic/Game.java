@@ -10,18 +10,40 @@ import java.util.*;
 
 public class Game {
 
+    /**
+     * Deck of cards used in the game
+     */
     private Deck deck = new Deck();
 
+    /**
+     * List of players playing the current game
+     */
     private List<Player> players = new LinkedList<>();
+
+    /**
+     * Index of the last player in the list of players.
+     * It's also the index of the game's dealer.
+     */
     private int lastPlayerIndex;
 
+    /**
+     * Player who won the last trick and leads the next.
+     */
     private Player leadsNextTrick;
+
+    /**
+     * Player who picked the trump suit of the current round.
+     */
     private Player pickedTrumpSuit;
 
 
     private static Scanner scanner = new Scanner(System.in);
 
 
+    /**
+     * Creates a new instance of the game
+     * @param playerNames a list of String representing the names of players
+     */
     public Game(List<String> playerNames) {
         if (!(playerNames.size() >= 2 && playerNames.size() <= 4)) {
             throw new IllegalArgumentException("Number of players cannot be less than 2 or greater than 4.");
@@ -37,26 +59,28 @@ public class Game {
     }
 
 
-    public void startGame() {
+    public void playGame() {
         playRound();
     }
 
 
+    /**
+     * Play a game round.
+     * A game round starts with dealing the cards, picking the trump suit,
+     * playing all the cards in the hand and calculating the round score.
+     */
     private void playRound() {
         resetDealer();
-        System.out.println("The dealer is " + players.get(lastPlayerIndex));
-
-        resetPlayerWhoPickedTrumpSuit();
-
+        pickedTrumpSuit = null;
         dealCards();
 
+        System.out.println("The dealer is " + players.get(lastPlayerIndex));
         printPlayersHands();
 
         pickTrumpSuit();
         dealRestOfCards();
 
-
-
+        // play 8 hands
         for (int i = 0; i < 8; i++) {
             printCollectedCards();
             printPlayersHands();
@@ -66,7 +90,7 @@ public class Game {
             playHand();
         }
 
-         calculateScore();
+         calculateGameRoundScore();
 
         for (Player player : players) {
             System.out.println(player.getScore());
@@ -78,6 +102,10 @@ public class Game {
     }
 
 
+    /**
+     * Play a hand. Player who leads the trick picks a card.
+     * Every player should follow suit or use a trump card.
+     */
     private void playHand() {
         List<Player> playingOrder = getPlayingOrder();
 
@@ -86,20 +114,19 @@ public class Game {
         System.out.println("Please choose a card to play:");
         for (Player player : playingOrder) {
             System.out.print(player.getName() + ": ");
-            int cardIndex = scanner.nextInt();
-
+            int cardIndex = Integer.parseInt(scanner.nextLine());
             System.out.println(player.getCard(cardIndex));
-            scanner.nextLine();
+
             cardsPlayed.put(player.removeCard(cardIndex), player);
         }
 
         Card strongestCard = Collections.max(cardsPlayed.keySet());
 
-        Player wonTheHand = cardsPlayed.get(strongestCard);
+        Player wonTheTrick = cardsPlayed.get(strongestCard);
 
-        wonTheHand.addWonTrick(cardsPlayed.keySet());
+        wonTheTrick.addWonTrick(cardsPlayed.keySet());
 
-        leadsNextTrick = wonTheHand;
+        leadsNextTrick = wonTheTrick;
     }
 
 
@@ -121,6 +148,17 @@ public class Game {
 
         for (Player player : players) {
             for (int i = 0; i < 2; i++) {
+                player.addCard(deck.dealCard());
+            }
+        }
+    }
+
+
+    private void dealRestOfCards() {
+        for (Player player : players) {
+            // the player who took the top card will have 6 cards, while the rest only 5
+            int cardsToDeal = player.getHandSize() == 6 ? 2 : 3;
+            for (int i = 0; i < cardsToDeal; i++) {
                 player.addCard(deck.dealCard());
             }
         }
@@ -216,37 +254,17 @@ public class Game {
     }
 
 
-    private void dealRestOfCards() {
-        for (Player player : players) {
-            // the player who took the top card will have 6 cards, while the rest only 5
-            int cardsToDeal = player.getHandSize() == 6 ? 2 : 3;
-            for (int i = 0; i < cardsToDeal; i++) {
-                player.addCard(deck.dealCard());
-            }
-        }
-    }
-
-
-//    private void setPlayingOrder() {
-//        playingOrder = new LinkedList<>(playersInDealingOrder);
-//        ListIterator<Player> playerIterator = playingOrder.listIterator(playingOrder.size());
-//
-//        while (true) {
-//            if (playerIterator.hasPrevious()) {
-//                Player playerToMove = playerIterator.previous();
-//                playerIterator.remove();
-//                playingOrder.add(0, playerToMove);
-//                if (playerToMove == tookLastHand) {
-//                    break;
-//                }
-//            }
-//        }
-//    }
-
-
+    /**
+     * Set the playing order of the next trick.
+     * The player who leads the next trick is the first in
+     * the order, and the rest are ordered clockwise.
+     * @return a list of Player where the first player is the player
+     * who leads the trick
+     */
     private List<Player> getPlayingOrder() {
         List<Player> dealingOrder = new LinkedList<>(players);
 
+        // TODO fix for 2 and 3 players
         if (leadsNextTrick == dealingOrder.get(0)) {
             return dealingOrder;
         } else if (leadsNextTrick == dealingOrder.get(1)) {
@@ -286,23 +304,23 @@ public class Game {
      * the highest score, his match points go to the player with the highest
      * score and his BT counter increases by one.
      */
-    private void calculateScore() {
+    private void calculateGameRoundScore() {
         List<Player> playersSortedByMatchPoints = new ArrayList<>(players);
         playersSortedByMatchPoints.sort(Comparator.comparingInt(Player::getMatchPoints));
 
-        int totalGameScoreWithoutTrumpSuitChooser = 0;
+        int totalGameScoreWithoutTrumpSuitPicker = 0;
         for (Player player : players) {
             if (player != pickedTrumpSuit) {
-                if (player.getMatchPoints() < 1) {
+                if (player.getMatchPoints() == 0) {
                     player.increaseScore(-10);
                     continue;
                 }
                 player.increaseScore();
-                totalGameScoreWithoutTrumpSuitChooser += player.getMatchPoints();
+                totalGameScoreWithoutTrumpSuitPicker += player.getMatchPoints();
             }
         }
 
-        int trumpSuitChooserScore = 16 - totalGameScoreWithoutTrumpSuitChooser;
+        int trumpSuitChooserScore = 16 - totalGameScoreWithoutTrumpSuitPicker;
         Player playerWithHighestScore = Collections.max(playersSortedByMatchPoints);
 
         // TODO divide the match points of the trump suit chooser evenly among the players with a equal highest score
@@ -314,10 +332,6 @@ public class Game {
         }
     }
 
-
-    private void resetPlayerWhoPickedTrumpSuit() {
-        pickedTrumpSuit = null;
-    }
 
     private void printPlayersHands() {
         HandTableGenerator.generateTable(players);

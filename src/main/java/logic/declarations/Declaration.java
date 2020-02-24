@@ -2,7 +2,7 @@ package logic.declarations;
 
 import logic.deckofcards.Card;
 
-public interface IDeclaration {
+public interface Declaration {
 
     String getName();
 

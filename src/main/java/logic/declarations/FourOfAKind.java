@@ -4,7 +4,7 @@ import logic.deckofcards.Card;
 
 import java.util.Map;
 
-public enum FourOfAKind implements IDeclaration {
+public enum FourOfAKind implements Declaration {
     JACK("Four Jacks", 200, Card.Rank.JACK),
     NINE("Four Nines", 140, Card.Rank.NINE),
     ACE("Four Aces", 100, Card.Rank.ACE),

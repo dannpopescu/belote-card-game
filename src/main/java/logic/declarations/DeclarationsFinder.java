@@ -16,8 +16,8 @@ public class DeclarationsFinder {
      * @param handOfCards a list of cards that a player holds
      * @return a list of IDeclaration references
      */
-    public static List<IDeclaration> getDeclarations(List<Card> handOfCards) {
-        List<IDeclaration> declarations = new ArrayList<>();
+    public static List<Declaration> getDeclarations(List<Card> handOfCards) {
+        List<Declaration> declarations = new ArrayList<>();
 
         declarations.addAll(getFoursOfAKind(handOfCards));
         declarations.addAll(getSequencesOfCards(handOfCards));

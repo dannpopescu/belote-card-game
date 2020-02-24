@@ -5,7 +5,7 @@ import logic.deckofcards.Card;
 import java.util.Comparator;
 import java.util.List;
 
-public class SequenceOfCards implements IDeclaration {
+public class SequenceOfCards implements Declaration {
 
     private String name;
     private int points;
