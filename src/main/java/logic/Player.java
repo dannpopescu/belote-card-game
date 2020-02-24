@@ -28,11 +28,6 @@ public class Player implements Comparable<Player> {
      * True if player is the dealer in the current round
      */
     private boolean isDealer;
-//
-//    /**
-//     * True if player pick the trump suit of the game round
-//     */
-//    private boolean pickedTrumpSuit;
 
     /**
      * List of player's cards in the current round
@@ -109,24 +104,6 @@ public class Player implements Comparable<Player> {
     public void setDealer(boolean dealer) {
         isDealer = dealer;
     }
-//
-//
-//    /**
-//     * Returns true if player chose the trump suit in the current round
-//     * @return true i player chose the trump suit
-//     */
-//    public boolean pickedTrumpSuit() {
-//        return pickedTrumpSuit;
-//    }
-//
-//
-//    /**
-//     * Records the fact that player chose the trump suit of the round
-//     * @param pickedTrumpSuit true if player chose the trump suit
-//     */
-//    public void setPickedTrumpSuit(boolean pickedTrumpSuit) {
-//        this.pickedTrumpSuit = pickedTrumpSuit;
-//    }
 
 
     /**
@@ -244,9 +221,6 @@ public class Player implements Comparable<Player> {
         return matchPoints;
     }
 
-    public void sortCards() {
-
-    }
 
 
     public void checkDeclarations() {

@@ -9,19 +9,27 @@ import ui.HandTableGenerator;
 import java.util.*;
 
 public class Game {
-    private int playersLastIndex;
-    private List<Player> players;
-    private Deck deck;
+
+    private Deck deck = new Deck();
+
+    private List<Player> players = new LinkedList<>();
+    private int lastPlayerIndex;
+
     private Player leadsNextTrick;
     private Player pickedTrumpSuit;
 
 
     private static Scanner scanner = new Scanner(System.in);
 
+
     public Game(List<String> playerNames) {
-        this.playersLastIndex = playerNames.size() - 1;
-        this.deck = new Deck();
-        this.players = new LinkedList<>();
+        if (!(playerNames.size() >= 2 && playerNames.size() <= 4)) {
+            throw new IllegalArgumentException("Number of players cannot be less than 2 or greater than 4.");
+        }
+
+        deck.populateDeck(players.size());
+
+        this.lastPlayerIndex = playerNames.size() - 1;
 
         for (String playerName : playerNames) {
             players.add(new Player(playerName));
@@ -30,18 +38,15 @@ public class Game {
 
 
     public void startGame() {
-        deck.populateDeck(players.size());
         playRound();
-        System.out.println("==============================================");
-//        playRound();
     }
 
 
     private void playRound() {
-        resetDealer(); // dealer is the last player in the players deque
-        System.out.println("The dealer is " + players.get(playersLastIndex));
+        resetDealer();
+        System.out.println("The dealer is " + players.get(lastPlayerIndex));
 
-        resetOwnerOfTheGame();
+        resetPlayerWhoPickedTrumpSuit();
 
         dealCards();
 
@@ -124,24 +129,35 @@ public class Game {
 
     /**
      * Prompts the players to choose the game's trump suit. Bidding is done in two rounds.
-     * In the first, the top card is switched face up and the
+     * In the first, the top card is turned face up and the
      * players choose if they want to receive that card and set its suit as trump suit.
      * If nobody wants the top card, in the second round each player
      * takes turn to say a custom trump suit or pass.
      */
     private void pickTrumpSuit() {
-
-        // first round of bidding: accepting/passing the top card
         Card topCard = deck.peekCard();
-        Card.Suit topCardSuit = topCard.getSuit(); // used in the second round to make sure the player doesn't chooses it
 
-        // handles the "abizon" case: when the JACK is the top card, the next player MUST play in it
+        boolean firstRoundSuccessful = bidFirstRound(topCard);
+
+        if (!firstRoundSuccessful) {
+            bidSecondRound(topCard);
+        }
+    }
+
+
+    /**
+     * Handle the first round of bidding for a trump suit.
+     * The top card is turned face up and every player in clock-wise
+     * order from dealer has a chance to play in that card or to skip.
+     * @param topCard the card faced up
+     * @return true if the bidding round ended successfully
+     */
+    private boolean bidFirstRound(Card topCard) {
+        // handle ABIZON case
         if (topCard.getRank() == Card.Rank.JACK) {
-            pickedTrumpSuit = players.get(0);
-            leadsNextTrick = players.get(0);
-            deck.setTrumpSuit(topCard.getSuit());
+            setTrumpSuitAndPicker(players.get(0), topCard.getSuit());
             System.out.println("ABIZON");
-            return;
+            return true;
         }
 
         System.out.println("Top card: " + topCard);
@@ -149,36 +165,54 @@ public class Game {
 
         for (Player player : players) {
             System.out.print(player.getName() + ": ");
-            String action = scanner.nextLine().toLowerCase();
-            if (action.equals("a")) {
-                System.out.println(player.getName() + " accepted the card. The trump suit is " + topCard.suitToString().toUpperCase());
-                pickedTrumpSuit = player;
-                leadsNextTrick = player;
+            String action = scanner.nextLine();
+            if (action.equalsIgnoreCase("a")) {
+                System.out.println(player.getName() + " accepted the card. The trump suit is " + topCard.getSuit().name());
+                setTrumpSuitAndPicker(player, topCard.getSuit());
                 player.addCard(deck.dealCard());
-                deck.setTrumpSuit(topCardSuit);
-                return;
+                return true;
             }
         }
 
-        // the dealer receives the top card if no one takes it in the first round of bidding
-        players.get(playersLastIndex).addCard(deck.dealCard());
+        return false;
+    }
 
-        // second round of bidding: choosing a trump suit or passing
+
+    /**
+     * Handle the second round of bidding if the first was unsuccessful.
+     * Every player has a chance to choose the trump suit or to skip.
+     * @param topCard used in the first round
+     */
+    private void bidSecondRound(Card topCard) {
+        // the dealer receives the top card because no one have taken it in the first round of bidding
+        players.get(lastPlayerIndex).addCard(deck.dealCard());
+
         System.out.println("[P]ass or select a trump suite?");
         for (Player player : players) {
             System.out.print(player.getName() + ": ");
             String suitChoiceOrInvalid = scanner.nextLine().toLowerCase();
 
             for (Card.Suit suit : Card.Suit.values()) {
-                if (suit.name().toLowerCase().equals(suitChoiceOrInvalid) // if the user entered a suit name
-                        && suit != topCardSuit) { // it's not the top card's suit
-                    pickedTrumpSuit = player;
-                    leadsNextTrick = player;
-                    deck.setTrumpSuit(suit);
+                if (suit.name().equalsIgnoreCase(suitChoiceOrInvalid) // if the user entered a valid suit name
+                        && suit != topCard.getSuit()) { // and it's not the top card's suit
+                    setTrumpSuitAndPicker(player, topCard.getSuit());
                     return;
                 }
             }
         }
+    }
+
+
+    /**
+     * Set the trump suit of the game. The player who picked it is remembered
+     * for later use and he leads the next trick.
+     * @param player who picked the trump suit
+     * @param suit the trump suit of the game
+     */
+    private void setTrumpSuitAndPicker(Player player, Card.Suit suit) {
+        pickedTrumpSuit = player;
+        leadsNextTrick = player;
+        deck.setTrumpSuit(suit);
     }
 
 
@@ -189,7 +223,6 @@ public class Game {
             for (int i = 0; i < cardsToDeal; i++) {
                 player.addCard(deck.dealCard());
             }
-            player.sortCards();
         }
     }
 
@@ -233,14 +266,15 @@ public class Game {
 
 
     /**
+     * Dealer is the last player in the players list.
      * Moves the first player to the end and makes him the dealer of the game.
      */
     private void resetDealer() {
         if (!players.isEmpty()) {
-            players.get(playersLastIndex).setDealer(false);
+            players.get(lastPlayerIndex).setDealer(false);
             players.add(players.remove(0));
-            assert players.get(playersLastIndex) != null;
-            players.get(playersLastIndex).setDealer(true);
+            assert players.get(lastPlayerIndex) != null;
+            players.get(lastPlayerIndex).setDealer(true);
         }
     }
 
@@ -281,7 +315,7 @@ public class Game {
     }
 
 
-    private void resetOwnerOfTheGame() {
+    private void resetPlayerWhoPickedTrumpSuit() {
         pickedTrumpSuit = null;
     }
 
