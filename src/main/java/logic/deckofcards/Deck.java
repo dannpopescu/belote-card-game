@@ -17,6 +17,26 @@ public class Deck {
 
 
     /**
+     * Adds 24 cards to the deck. If there are four players, adds
+     * additionally the SEVEN's and EIGHT's.
+     */
+    public void populateDeck(int numberOfPlayers) {
+        EnumSet<Card.Rank> rankRange;
+        if (numberOfPlayers == 4) {
+            rankRange = EnumSet.range(Card.Rank.SEVEN, Card.Rank.ACE);
+        } else {
+            rankRange = EnumSet.range(Card.Rank.NINE, Card.Rank.ACE);
+        }
+
+        for (Card.Rank r : rankRange) {
+            for (Card.Suit s : Card.Suit.values()) {
+                addCard(new Card(s, r));
+            }
+        }
+    }
+
+
+    /**
      * Adds a card to the deck.
      * @param card card to be added to the deck.
      */

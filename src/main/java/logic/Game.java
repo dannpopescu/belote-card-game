@@ -30,7 +30,7 @@ public class Game {
 
 
     public void startGame() {
-        populateDeck();
+        deck.populateDeck(players.size());
         playRound();
         System.out.println("==============================================");
 //        playRound();
@@ -229,24 +229,7 @@ public class Game {
     }
 
 
-    /**
-     * Adds 24 cards to the deck. If there are four players, adds
-     * additionally the SEVEN's and EIGHT's.
-     */
-    private void populateDeck() {
-        EnumSet<Card.Rank> rankRange;
-        if (players.size() == 4) {
-            rankRange = EnumSet.range(Card.Rank.SEVEN, Card.Rank.ACE);
-        } else {
-            rankRange = EnumSet.range(Card.Rank.NINE, Card.Rank.ACE);
-        }
 
-        for (Card.Rank r : rankRange) {
-            for (Card.Suit s : Card.Suit.values()) {
-                deck.addCard(new Card(s, r));
-            }
-        }
-    }
 
 
     /**

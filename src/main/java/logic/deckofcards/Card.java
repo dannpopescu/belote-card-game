@@ -121,6 +121,11 @@ public class Card implements Comparable<Card> {
         }
 
 
+        public boolean isTrump() {
+            return isTrump;
+        }
+
+
         /**
          * Clears the trump suit of the previous game and sets
          * the trump suit of the current game.
