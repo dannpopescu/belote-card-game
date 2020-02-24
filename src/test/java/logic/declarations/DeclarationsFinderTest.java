@@ -133,6 +133,46 @@ class DeclarationsFinderTest {
     }
 
     @Test
+    void canFindFourEights() {
+        // given
+        List<Card> handOfCards = Arrays.asList(
+                new Card(Card.Suit.SPADES, Card.Rank.EIGHT),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.EIGHT),
+                new Card(Card.Suit.CLUBS, Card.Rank.EIGHT),
+                new Card(Card.Suit.HEARTS, Card.Rank.EIGHT),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.KING),
+                new Card(Card.Suit.SPADES, Card.Rank.JACK)
+        );
+
+        // when
+        Declaration declaration = DeclarationsFinder.getDeclarations(handOfCards).get(0);
+
+        // then
+        assertEquals(FourOfAKind.getFourOfAKind(Card.Rank.EIGHT), declaration,
+                "Should find a declaration of four Eights.");
+    }
+
+    @Test
+    void canFindFourSevens() {
+        // given
+        List<Card> handOfCards = Arrays.asList(
+                new Card(Card.Suit.SPADES, Card.Rank.SEVEN),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.SEVEN),
+                new Card(Card.Suit.CLUBS, Card.Rank.SEVEN),
+                new Card(Card.Suit.HEARTS, Card.Rank.SEVEN),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.KING),
+                new Card(Card.Suit.SPADES, Card.Rank.JACK)
+        );
+
+        // when
+        Declaration declaration = DeclarationsFinder.getDeclarations(handOfCards).get(0);
+
+        // then
+        assertEquals(FourOfAKind.getFourOfAKind(Card.Rank.SEVEN), declaration,
+                "Should find a declaration of four Sevens.");
+    }
+
+    @Test
     void canFindSequenceOfThree() {
         // given
         List<Card> handOfCards = Arrays.asList(
