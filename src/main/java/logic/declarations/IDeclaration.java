@@ -1,6 +1,6 @@
 package logic.declarations;
 
-import logic.deckofcards.Rank;
+import logic.deckofcards.Card;
 
 public interface IDeclaration {
 
@@ -8,7 +8,7 @@ public interface IDeclaration {
 
     int getPoints();
 
-    Rank getHighestRank();
+    Card.Rank getHighestRank();
 
 
 }

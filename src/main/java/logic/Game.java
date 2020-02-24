@@ -2,8 +2,6 @@ package logic;
 
 import logic.deckofcards.Card;
 import logic.deckofcards.Deck;
-import logic.deckofcards.Rank;
-import logic.deckofcards.Suit;
 import logic.declarations.DeclarationsFinder;
 import ui.CollectedCardsTableGenerator;
 import ui.HandTableGenerator;
@@ -135,10 +133,10 @@ public class Game {
 
         // first round of bidding: accepting/passing the top card
         Card topCard = deck.peekCard();
-        Suit topCardSuit = topCard.getSuit(); // used in the second round to make sure the player doesn't chooses it
+        Card.Suit topCardSuit = topCard.getSuit(); // used in the second round to make sure the player doesn't chooses it
 
         // handles the "abizon" case: when the JACK is the top card, the next player MUST play in it
-        if (topCard.getRank() == Rank.JACK) {
+        if (topCard.getRank() == Card.Rank.JACK) {
             pickedTrumpSuit = players.get(0);
             leadsNextTrick = players.get(0);
             deck.setTrumpSuit(topCard.getSuit());
@@ -171,7 +169,7 @@ public class Game {
             System.out.print(player.getName() + ": ");
             String suitChoiceOrInvalid = scanner.nextLine().toLowerCase();
 
-            for (Suit suit : Suit.values()) {
+            for (Card.Suit suit : Card.Suit.values()) {
                 if (suit.name().toLowerCase().equals(suitChoiceOrInvalid) // if the user entered a suit name
                         && suit != topCardSuit) { // it's not the top card's suit
                     pickedTrumpSuit = player;
@@ -236,15 +234,15 @@ public class Game {
      * additionally the SEVEN's and EIGHT's.
      */
     private void populateDeck() {
-        EnumSet<Rank> rankRange;
+        EnumSet<Card.Rank> rankRange;
         if (players.size() == 4) {
-            rankRange = EnumSet.range(Rank.SEVEN, Rank.ACE);
+            rankRange = EnumSet.range(Card.Rank.SEVEN, Card.Rank.ACE);
         } else {
-            rankRange = EnumSet.range(Rank.NINE, Rank.ACE);
+            rankRange = EnumSet.range(Card.Rank.NINE, Card.Rank.ACE);
         }
 
-        for (Rank r : rankRange) {
-            for (Suit s : Suit.values()) {
+        for (Card.Rank r : rankRange) {
+            for (Card.Suit s : Card.Suit.values()) {
                 deck.addCard(new Card(s, r));
             }
         }

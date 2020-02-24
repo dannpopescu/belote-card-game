@@ -1,8 +1,6 @@
 package logic.declarations;
 
 import logic.deckofcards.Card;
-import logic.deckofcards.Rank;
-import logic.deckofcards.Suit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +33,10 @@ public class DeclarationsFinder {
      * @return a list of FourOfAKind references
      */
     private static List<FourOfAKind> getFoursOfAKind(List<Card> handOfCards) {
-        Map<Rank, Long> rankFrequency = handOfCards.stream()
+        Map<Card.Rank, Long> rankFrequency = handOfCards.stream()
                 .collect(Collectors.groupingBy(Card::getRank, Collectors.counting()));
 
-        List<Rank> ranksWithFrequencyFour = rankFrequency.entrySet().stream()
+        List<Card.Rank> ranksWithFrequencyFour = rankFrequency.entrySet().stream()
                 .filter(e -> e.getValue() == 4)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
@@ -60,10 +58,10 @@ public class DeclarationsFinder {
     private static List<SequenceOfCards> getSequencesOfCards(List<Card> handOfCards) {
         List<List<Card>> validSequencesOfCardsAsLists = new ArrayList<>();
 
-        for (Suit suit : Suit.values()) {
-            List<List<Rank>> validSequencesOfRanksInHand = getValidSequencesOfRanks(handOfCards, suit);
+        for (Card.Suit suit : Card.Suit.values()) {
+            List<List<Card.Rank>> validSequencesOfRanksInHand = getValidSequencesOfRanks(handOfCards, suit);
 
-            for (List<Rank> sequenceOfRanks : validSequencesOfRanksInHand) {
+            for (List<Card.Rank> sequenceOfRanks : validSequencesOfRanksInHand) {
                 validSequencesOfCardsAsLists.add(
                         handOfCards.stream()
                                 .filter(card -> sequenceOfRanks.contains(card.getRank()))
@@ -87,17 +85,17 @@ public class DeclarationsFinder {
      * @param suit the Suit of the Ranks to check against
      * @return a list of lists of valid Rank sequences
      */
-    private static List<List<Rank>> getValidSequencesOfRanks(List<Card> handOfCards, Suit suit) {
+    private static List<List<Card.Rank>> getValidSequencesOfRanks(List<Card> handOfCards, Card.Suit suit) {
         int[] cardsFrequency = getRanksFrequencyArray(handOfCards, suit);
         int minNumberOfConsecutiveCards = 3;
-        List<List<Rank>> sequencesOfRanks = new ArrayList<>();
+        List<List<Card.Rank>> sequencesOfRanks = new ArrayList<>();
 
         outerloop:
         for (int i = 0; i <= cardsFrequency.length - minNumberOfConsecutiveCards; i++) {
             // check if the rank have been already found to be part of a sequence
             if (!sequencesOfRanks.isEmpty()) {
-                for (List<Rank> sequenceOfRanks : sequencesOfRanks) {
-                    if (sequenceOfRanks.contains(Rank.values()[i])) {
+                for (List<Card.Rank> sequenceOfRanks : sequencesOfRanks) {
+                    if (sequenceOfRanks.contains(Card.Rank.values()[i])) {
                         continue outerloop;
                     }
                 }
@@ -105,17 +103,17 @@ public class DeclarationsFinder {
 
             int numberOfConsecutiveCards = cardsFrequency[i] + cardsFrequency[i + 1] + cardsFrequency[i + 2];
             if (numberOfConsecutiveCards == 3) {
-                List<Rank> sequenceOfRanks = new ArrayList<>(
-                        List.of(Rank.values()[i],
-                                Rank.values()[i + 1],
-                                Rank.values()[i + 2])
+                List<Card.Rank> sequenceOfRanks = new ArrayList<>(
+                        List.of(Card.Rank.values()[i],
+                                Card.Rank.values()[i + 1],
+                                Card.Rank.values()[i + 2])
                 );
 
                 // check if more ranks follow right after the newly found sequenceOfRanks
                 int nextIndexToCheck = i + 3;
                 for (int j = nextIndexToCheck; j < cardsFrequency.length; j++) {
                     if (cardsFrequency[j] == 1) {
-                        sequenceOfRanks.add(Rank.values()[j]);
+                        sequenceOfRanks.add(Card.Rank.values()[j]);
                     } else {
                         break; // the streak of consecutive cards ends
                     }
@@ -141,13 +139,13 @@ public class DeclarationsFinder {
      * @param suit the suit of the cards to search for
      * @return an array of int filled with zeros and ones
      */
-    private static int[] getRanksFrequencyArray(List<Card> handOfCards, Suit suit) {
+    private static int[] getRanksFrequencyArray(List<Card> handOfCards, Card.Suit suit) {
         int[] cardsFrequency = new int[8];
 
-        List<Rank> ranksOfTheGivenSuit = filterRanks(handOfCards, suit);
+        List<Card.Rank> ranksOfTheGivenSuit = filterRanks(handOfCards, suit);
 
         int index = 0;
-        for (Rank rank : Rank.values()) {
+        for (Card.Rank rank : Card.Rank.values()) {
             if (ranksOfTheGivenSuit.contains(rank)) {
                 cardsFrequency[index] = 1;
             } else {
@@ -167,7 +165,7 @@ public class DeclarationsFinder {
      * @param searchedSuit the Suit to search for
      * @return a list of Rank references
      */
-    private static List<Rank> filterRanks(List<Card> listOfCards, Suit searchedSuit) {
+    private static List<Card.Rank> filterRanks(List<Card> listOfCards, Card.Suit searchedSuit) {
         return listOfCards.stream()
                 .filter(card -> card.getSuit() == searchedSuit)
                 .map(Card::getRank)

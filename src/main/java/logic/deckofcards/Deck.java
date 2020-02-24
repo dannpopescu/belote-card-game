@@ -48,7 +48,7 @@ public class Deck {
      * updates the points of every card
      * @param suit the new trump suit
      */
-    public void setTrumpSuit(Suit suit) {
+    public void setTrumpSuit(Card.Suit suit) {
         suit.setTrump();
 
         for (Card card : deck) {

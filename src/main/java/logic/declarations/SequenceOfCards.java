@@ -1,7 +1,6 @@
 package logic.declarations;
 
 import logic.deckofcards.Card;
-import logic.deckofcards.Rank;
 
 import java.util.Comparator;
 import java.util.List;
@@ -47,7 +46,7 @@ public class SequenceOfCards implements IDeclaration {
     }
 
     @Override
-    public Rank getHighestRank() {
+    public Card.Rank getHighestRank() {
         Card highestCard = cards.get(cards.size() - 1);
         return highestCard.getRank();
     }

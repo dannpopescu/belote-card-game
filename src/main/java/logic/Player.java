@@ -1,10 +1,8 @@
 package logic;
 
 import logic.deckofcards.Card;
-import logic.deckofcards.Rank;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Player implements Comparable<Player> {
 
