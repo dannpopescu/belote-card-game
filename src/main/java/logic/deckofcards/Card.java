@@ -81,6 +81,7 @@ public class Card implements Comparable<Card> {
         }
     }
 
+
     public enum Rank {
         SEVEN("7", 0),
         EIGHT("8", 0),
@@ -99,18 +100,8 @@ public class Card implements Comparable<Card> {
             this.fileSymbol = fileSymbol;
             this.defaultPoints = defaultPoints;
         }
-
-
-        /**
-         *  The symbol associated with this rank. Returns the symbol, which
-         *  usually constitutes a single character, in the form of a string.
-         *  Symbol is used for the construction of the filenames of the card images.
-         *  @return string containing the symbol for the rank.
-         */
-        public String getFileSymbol() {
-            return fileSymbol;
-        }
     }
+
 
     public enum Suit {
         CLUBS("c", '\u2663'),
@@ -139,17 +130,6 @@ public class Card implements Comparable<Card> {
                 suit.isTrump = false;
             }
             isTrump = true;
-        }
-
-
-        /**
-         *  The symbol associated with this suit.  Returns the symbol, which
-         *  usually constitutes a single character, in the form of a string.
-         *  Symbol is used for the construction of the filenames of the card images.
-         *  @return string containing the symbol for the suit.
-         */
-        public String getFileSymbol() {
-            return fileSymbol;
         }
     }
 }
