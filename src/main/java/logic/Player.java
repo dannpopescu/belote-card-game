@@ -41,6 +41,10 @@ public class Player implements Comparable<Player> {
      */
     private Set<Card> wonTricks;
 
+    /**
+     * List of player's declarations. Can contain invalid declarations.
+     */
+    private List<Declaration> declarations;
 
     /**
      * Constructs a new player
@@ -126,6 +130,13 @@ public class Player implements Comparable<Player> {
      */
     public void addCard(Card card) {
         hand.add(card);
+
+        if (hand.size() == 8) {
+            declarations = DeclarationsFinder.getDeclarations(hand);
+            if (declarations.isEmpty()) {
+                declarations = null;
+            }
+        }
     }
 
 
@@ -220,18 +231,38 @@ public class Player implements Comparable<Player> {
             matchPoints++;
         }
 
-        return matchPoints;
+        return matchPoints + getDeclarationsMatchPoints();
     }
 
 
 
     public List<Declaration> getDeclarations() {
-        List<Declaration> declarations = DeclarationsFinder.getDeclarations(hand);
-        return declarations.isEmpty() ? null : declarations;
+        return declarations;
     }
 
     public Declaration getHighestDeclaration() {
-        return getDeclarations() == null ? null : Collections.max(getDeclarations());
+        return declarations == null ? null : Collections.max(declarations);
+    }
+
+    public void setDeclarationsToInvalid() {
+        declarations = null;
+    }
+
+    public int getDeclarationsMatchPoints() {
+        if (declarations == null) {
+            return 0;
+        }
+        return declarations.stream()
+                .map(Declaration::getMatchPoints)
+                .mapToInt(Integer::intValue)
+                .sum();
+    }
+
+    public void clearVariablesAfterGameRound() {
+        isDealer = false;
+        hand.clear();
+        wonTricks.clear();
+        declarations = null;
     }
 
 
@@ -265,6 +296,14 @@ public class Player implements Comparable<Player> {
      * @return a String representing the cards in the player's hand.
      */
     public String handToStringForTable() {
+        StringBuilder sb = new StringBuilder();
+        for (Card card : hand) {
+            sb.append(card.toStringUncolored()).append(", ");
+        }
+        return sb.toString();
+    }
+
+    public String handToStringForTableColored() {
         StringBuilder sb = new StringBuilder();
         for (Card card : hand) {
             sb.append(card).append(", ");

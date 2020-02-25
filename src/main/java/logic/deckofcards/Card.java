@@ -1,5 +1,7 @@
 package logic.deckofcards;
 
+import ui.ConsoleColors;
+
 public class Card implements Comparable<Card> {
 
     private Suit suit;
@@ -52,6 +54,22 @@ public class Card implements Comparable<Card> {
      * @return the name of the card.
      */
     public String toString() {
+        String color = "";
+
+        if (suit == Suit.SPADES) {
+            color = ConsoleColors.BLUE;
+        } else if (suit == Suit.CLUBS) {
+            color = ConsoleColors.GREEN;
+        } else if (suit == Suit.HEARTS) {
+            color = ConsoleColors.RED;
+        } else if (suit == Suit.DIAMONDS) {
+            color = ConsoleColors.YELLOW;
+        }
+
+        return color + rank.fileSymbol.toUpperCase() + "" + suit.unicodeSymbol + ConsoleColors.RESET;
+    }
+
+    public String toStringUncolored() {
         return rank.fileSymbol.toUpperCase() + "" + suit.unicodeSymbol;
     }
 

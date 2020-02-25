@@ -59,8 +59,9 @@ public class HandTableGenerator {
     private static void generatePlayerCardsCell(Player player) {
         System.out.print("| ");
         String cards = player.handToStringForTable();
+        String coloredCards = player.handToStringForTableColored();
 
-        System.out.print(cards);
+        System.out.print(coloredCards);
 
         int numberOfTrailingWhiteSpaces = 40 - cards.length() - 1;
 

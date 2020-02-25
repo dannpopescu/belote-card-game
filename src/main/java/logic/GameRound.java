@@ -8,10 +8,10 @@ import logic.declarations.Declaration;
 import logic.declarations.DeclarationsFinder;
 import logic.declarations.PlayerComparatorByDeclarations;
 import ui.CollectedCardsTableGenerator;
+import ui.ConsoleColors;
 import ui.HandTableGenerator;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GameRound {
 
@@ -72,7 +72,7 @@ public class GameRound {
         pickedTrumpSuit = null;
         dealCards();
 
-        System.out.println("The dealer is " + players.get(lastPlayerIndex));
+        System.out.println(ConsoleColors.RED + "The dealer is " + players.get(lastPlayerIndex) + ConsoleColors.RESET);
         printPlayersHands();
 
         pickTrumpSuit();
@@ -96,7 +96,7 @@ public class GameRound {
         }
 
         for (Player player : players) {
-            player.discardHand();
+            player.clearVariablesAfterGameRound();
         }
     }
 
@@ -219,7 +219,7 @@ public class GameRound {
             for (Card.Suit suit : Card.Suit.values()) {
                 if (suit.name().equalsIgnoreCase(suitChoiceOrInvalid) // if the user entered a valid suit name
                         && suit != topCard.getSuit()) { // and it's not the top card's suit
-                    setTrumpSuitAndPicker(player, topCard.getSuit());
+                    setTrumpSuitAndPicker(player, suit);
                     return;
                 }
             }
@@ -312,15 +312,15 @@ public class GameRound {
 
         Player strongestPlayerByDeclarations = Collections.max(players, new PlayerComparatorByDeclarations());
 
-        int additionalMatchPointsFromDeclarations = strongestPlayerByDeclarations.getDeclarations().stream()
-                .map(Declaration::getMatchPoints)
-                .mapToInt(Integer::intValue)
-                .sum();
-
-        playerDeclarationMatchPoints.put(strongestPlayerByDeclarations, additionalMatchPointsFromDeclarations);
+        for (Player player : players) {
+            if (player != strongestPlayerByDeclarations) {
+                player.setDeclarationsToInvalid();
+            }
+        }
 
         System.out.println("Best player: " + strongestPlayerByDeclarations.getName()
-                + "\nDeclarations: " + strongestPlayerByDeclarations.getDeclarations());
+                + "\nDeclarations: " + strongestPlayerByDeclarations.getDeclarations()
+        + "\nPlayer points: " + strongestPlayerByDeclarations.getDeclarationsMatchPoints());
     }
 
 
@@ -334,6 +334,11 @@ public class GameRound {
      * score and his BT counter increases by one.
      */
     private void calculateGameRoundScore() {
+        int gameScore = 16;
+        for (Player player : players) {
+            gameScore += player.getDeclarationsMatchPoints();
+        }
+
         List<Player> playersSortedByMatchPoints = new ArrayList<>(players);
         playersSortedByMatchPoints.sort(Comparator.comparingInt(Player::getMatchPoints));
 
@@ -345,11 +350,12 @@ public class GameRound {
                     continue;
                 }
                 player.increaseScore();
+
                 totalGameScoreWithoutTrumpSuitPicker += player.getMatchPoints();
             }
         }
 
-        int trumpSuitChooserScore = 16 - totalGameScoreWithoutTrumpSuitPicker;
+        int trumpSuitChooserScore = gameScore - totalGameScoreWithoutTrumpSuitPicker;
         Player playerWithHighestScore = Collections.max(playersSortedByMatchPoints);
 
         // TODO divide the match points of the trump suit chooser evenly among the players with a equal highest score
@@ -358,6 +364,13 @@ public class GameRound {
             playerWithHighestScore.increaseScore(trumpSuitChooserScore); // the player with the largest score get's the other's match points
         } else {
             pickedTrumpSuit.increaseScore(trumpSuitChooserScore);
+        }
+    }
+
+
+    private void clearGameRoundVariables() {
+        for (Player player : players) {
+            player.clearVariablesAfterGameRound();
         }
     }
 

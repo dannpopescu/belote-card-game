@@ -41,6 +41,8 @@ public class Game {
     public void playGame() {
         GameRound gr = new GameRound(players, deck);
         gr.playRound();
+        gr.playRound();
+        gr.playRound();
     }
 
 
