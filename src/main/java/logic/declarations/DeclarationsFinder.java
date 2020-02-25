@@ -3,6 +3,7 @@ package logic.declarations;
 import logic.deckofcards.Card;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,6 +27,27 @@ public class DeclarationsFinder {
     }
 
 
+    public static Declaration getBella(List<Card> handOfCards) {
+        Card.Suit trumpSuit = null;
+        for (Card.Suit suit : Card.Suit.values()) {
+            if (suit.isTrump()) {
+                trumpSuit = suit;
+            }
+        }
+
+        List<Card> bellaCards = Arrays.asList(
+                new Card(trumpSuit, Card.Rank.QUEEN),
+                new Card(trumpSuit, Card.Rank.KING)
+        );
+
+        if (handOfCards.containsAll(bellaCards)) {
+            return new SequenceOfCards(bellaCards);
+        }
+
+        return null;
+    }
+
+
     /**
      * Searches for four cards of the same rank and returns a list
      * of FourOfAKind references if anything found
@@ -41,9 +63,20 @@ public class DeclarationsFinder {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        return ranksWithFrequencyFour.stream()
-                .map(FourOfAKind::getFourOfAKind)
+        List<Card> cardsOfFrequencyFour = handOfCards.stream()
+                .filter(e -> ranksWithFrequencyFour.contains(e.getRank()))
                 .collect(Collectors.toList());
+
+        Map<Card.Rank, List<Card>> validFourOfAKind = cardsOfFrequencyFour.stream()
+                .collect(Collectors.groupingBy(Card::getRank, Collectors.toList()));
+
+        return validFourOfAKind.values().stream()
+                .map(FourOfAKind::new)
+                .collect(Collectors.toList());
+
+//        return ranksWithFrequencyFour.stream()
+//                .map(FourOfAKind::getFourOfAKind)
+//                .collect(Collectors.toList());
     }
 
 

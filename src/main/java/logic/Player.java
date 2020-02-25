@@ -1,6 +1,8 @@
 package logic;
 
 import logic.deckofcards.Card;
+import logic.declarations.Declaration;
+import logic.declarations.DeclarationsFinder;
 
 import java.util.*;
 
@@ -223,9 +225,13 @@ public class Player implements Comparable<Player> {
 
 
 
-    public void checkDeclarations() {
+    public List<Declaration> getDeclarations() {
+        List<Declaration> declarations = DeclarationsFinder.getDeclarations(hand);
+        return declarations.isEmpty() ? null : declarations;
+    }
 
-
+    public Declaration getHighestDeclaration() {
+        return getDeclarations() == null ? null : Collections.max(getDeclarations());
     }
 
 

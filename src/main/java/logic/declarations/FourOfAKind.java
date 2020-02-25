@@ -2,65 +2,76 @@ package logic.declarations;
 
 import logic.deckofcards.Card;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 
-public enum FourOfAKind implements Declaration {
-    JACK("Four Jacks", 200, Card.Rank.JACK),
-    NINE("Four Nines", 140, Card.Rank.NINE),
-    ACE("Four Aces", 100, Card.Rank.ACE),
-    TEN("Four Tens", 100, Card.Rank.TEN),
-    KING("Four Kings", 100, Card.Rank.KING),
-    QUEEN("Four Queens", 100, Card.Rank.QUEEN),
-    EIGHT("Four Eights", 0, Card.Rank.EIGHT),
-    SEVEN("Four Sevens", 0, Card.Rank.SEVEN);
+public class FourOfAKind extends Declaration {
 
-    private static final Map<Card.Rank, FourOfAKind> fourOfAKinds = Map.of(
-            Card.Rank.JACK, JACK,
-            Card.Rank.NINE, NINE,
-            Card.Rank.ACE, ACE,
-            Card.Rank.TEN, TEN,
-            Card.Rank.KING, KING,
-            Card.Rank.QUEEN, QUEEN,
-            Card.Rank.EIGHT, EIGHT,
-            Card.Rank.SEVEN, SEVEN
+    public FourOfAKind(List<Card> cards) {
+        if (!isFourOfAKind(cards)) {
+            throw new IllegalArgumentException("The given list does not contain four cards of the same kind.");
+        }
 
-    );
+        this.cards = cards;
 
-    private final String name;
-    private final int points;
-    private final Card.Rank rank;
-
-    FourOfAKind(String name, int points, Card.Rank rank) {
-        this.name = name;
-        this.points = points;
-        this.rank = rank;
+        switch (cards.get(0).getRank()) {
+            case JACK:
+                this.name = "Four Jacks";
+                this.points = 200;
+                break;
+            case NINE:
+                this.name = "Four Nines";
+                this.points = 140;
+                break;
+            case ACE:
+                this.name = "Four Aces";
+                this.points = 100;
+                break;
+            case TEN:
+                this.name = "Four Tens";
+                this.points = 100;
+                break;
+            case KING:
+                this.name = "Four Kings";
+                this.points = 100;
+                break;
+            case QUEEN:
+                this.name = "Four Queens";
+                this.points = 100;
+                break;
+            case EIGHT:
+                this.name = "Four Eights";
+                this.points = 0;
+                break;
+            case SEVEN:
+                this.name = "Four Sevens";
+                this.points = 0;
+                break;
+        }
     }
 
-    public static FourOfAKind getFourOfAKind(Card.Rank rank) {
-        return fourOfAKinds.get(rank);
-    }
+    private boolean isFourOfAKind(List<Card> cards) {
+        if (cards.size() != 4) {
+            return false;
+        }
 
-    @Override
-    public String getName() {
-        return name;
-    }
+        Card.Rank firstRank = cards.get(0).getRank();
+        for (Card card : cards) {
+            if (card.getRank() != firstRank) {
+                return false;
+            }
+        }
 
-    @Override
-    public int getPoints() {
-        return points;
+        return true;
     }
 
     @Override
     public Card.Rank getHighestRank() {
-        return rank;
+        return cards.get(0).getRank();
     }
 
     @Override
-    public String toString() {
-        return "FourOfAKind{" +
-                "name='" + name + '\'' +
-                ", points=" + points +
-                ", rank=" + rank +
-                '}';
+    public Card getHighestCard() {
+        return Collections.max(cards);
     }
 }

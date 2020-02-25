@@ -28,8 +28,10 @@ class DeclarationsFinderTest {
         Declaration declaration = DeclarationsFinder.getDeclarations(handOfCards).get(0);
 
         // then
-        assertEquals(FourOfAKind.getFourOfAKind(Card.Rank.JACK), declaration,
-                "Should find a declaration of four Jacks.");
+        assertAll(
+                () -> assertEquals(200, declaration.getPoints(), "Declaration should have 200 points."),
+                () -> assertEquals(Card.Rank.JACK, declaration.getHighestRank(), "Highest rank should be a Jack.")
+        );
     }
 
     @Test
@@ -48,8 +50,10 @@ class DeclarationsFinderTest {
         Declaration declaration = DeclarationsFinder.getDeclarations(handOfCards).get(0);
 
         // then
-        assertEquals(FourOfAKind.getFourOfAKind(Card.Rank.NINE), declaration,
-                "Should find a declaration of four Nines.");
+        assertAll(
+                () -> assertEquals(140, declaration.getPoints(), "Declaration should have 140 points."),
+                () -> assertEquals(Card.Rank.NINE, declaration.getHighestRank(), "Highest rank should be a Nine.")
+        );
     }
 
     @Test
@@ -68,8 +72,10 @@ class DeclarationsFinderTest {
         Declaration declaration = DeclarationsFinder.getDeclarations(handOfCards).get(0);
 
         // then
-        assertEquals(FourOfAKind.getFourOfAKind(Card.Rank.ACE), declaration,
-                "Should find a declaration of four Aces.");
+        assertAll(
+                () -> assertEquals(100, declaration.getPoints(), "Declaration should have 100 points."),
+                () -> assertEquals(Card.Rank.ACE, declaration.getHighestRank(), "Highest rank should be an Ace.")
+        );
     }
 
     @Test
@@ -88,8 +94,10 @@ class DeclarationsFinderTest {
         Declaration declaration = DeclarationsFinder.getDeclarations(handOfCards).get(0);
 
         // then
-        assertEquals(FourOfAKind.getFourOfAKind(Card.Rank.TEN), declaration,
-                "Should find a declaration of four Tens.");
+        assertAll(
+                () -> assertEquals(100, declaration.getPoints(), "Declaration should have 100 points."),
+                () -> assertEquals(Card.Rank.TEN, declaration.getHighestRank(), "Highest rank should be a Ten.")
+        );
     }
 
     @Test
@@ -108,8 +116,10 @@ class DeclarationsFinderTest {
         Declaration declaration = DeclarationsFinder.getDeclarations(handOfCards).get(0);
 
         // then
-        assertEquals(FourOfAKind.getFourOfAKind(Card.Rank.KING), declaration,
-                "Should find a declaration of four Kings.");
+        assertAll(
+                () -> assertEquals(100, declaration.getPoints(), "Declaration should have 100 points."),
+                () -> assertEquals(Card.Rank.KING, declaration.getHighestRank(), "Highest rank should be a King.")
+        );
     }
 
     @Test
@@ -128,8 +138,10 @@ class DeclarationsFinderTest {
         Declaration declaration = DeclarationsFinder.getDeclarations(handOfCards).get(0);
 
         // then
-        assertEquals(FourOfAKind.getFourOfAKind(Card.Rank.QUEEN), declaration,
-                "Should find a declaration of four Queens.");
+        assertAll(
+                () -> assertEquals(100, declaration.getPoints(), "Declaration should have 100 points."),
+                () -> assertEquals(Card.Rank.QUEEN, declaration.getHighestRank(), "Highest rank should be a Queen.")
+        );
     }
 
     @Test
@@ -148,8 +160,10 @@ class DeclarationsFinderTest {
         Declaration declaration = DeclarationsFinder.getDeclarations(handOfCards).get(0);
 
         // then
-        assertEquals(FourOfAKind.getFourOfAKind(Card.Rank.EIGHT), declaration,
-                "Should find a declaration of four Eights.");
+        assertAll(
+                () -> assertEquals(0, declaration.getPoints(), "Declaration should have 0 points."),
+                () -> assertEquals(Card.Rank.EIGHT, declaration.getHighestRank(), "Highest rank should be a Eight.")
+        );
     }
 
     @Test
@@ -168,8 +182,10 @@ class DeclarationsFinderTest {
         Declaration declaration = DeclarationsFinder.getDeclarations(handOfCards).get(0);
 
         // then
-        assertEquals(FourOfAKind.getFourOfAKind(Card.Rank.SEVEN), declaration,
-                "Should find a declaration of four Sevens.");
+        assertAll(
+                () -> assertEquals(0, declaration.getPoints(), "Declaration should have 0 points."),
+                () -> assertEquals(Card.Rank.SEVEN, declaration.getHighestRank(), "Highest rank should be a Seven.")
+        );
     }
 
     @Test
@@ -367,5 +383,84 @@ class DeclarationsFinderTest {
                 () -> assertEquals(150, declaration.getPoints(), "Declaration should have 50 points."),
                 () -> assertEquals(Card.Rank.ACE, declaration.getHighestRank(), "Highest rank should be a Ace.")
         );
+    }
+
+    @Test
+    void FourJacksStrongerThanFourNines() {
+        // given
+        List<Card> handOfJack = Arrays.asList(
+                new Card(Card.Suit.SPADES, Card.Rank.JACK),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.JACK),
+                new Card(Card.Suit.CLUBS, Card.Rank.JACK),
+                new Card(Card.Suit.HEARTS, Card.Rank.JACK),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.KING),
+                new Card(Card.Suit.SPADES, Card.Rank.QUEEN)
+        );
+
+        List<Card> handOfNine = Arrays.asList(
+                new Card(Card.Suit.SPADES, Card.Rank.NINE),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.NINE),
+                new Card(Card.Suit.CLUBS, Card.Rank.NINE),
+                new Card(Card.Suit.HEARTS, Card.Rank.NINE),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.KING),
+                new Card(Card.Suit.SPADES, Card.Rank.QUEEN)
+        );
+
+        Declaration fourJack = DeclarationsFinder.getDeclarations(handOfJack).get(0);
+        Declaration fourNine = DeclarationsFinder.getDeclarations(handOfNine).get(0);
+
+        // when
+        assertEquals(1, fourJack.compareTo(fourNine), "Four Jacks is a stronger declaration than four Nines.");
+    }
+
+    @Test
+    void FourAcesStrongerThanASequenceOfFive() {
+        List<Card> handOfAce = Arrays.asList(
+                new Card(Card.Suit.SPADES, Card.Rank.ACE),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.ACE),
+                new Card(Card.Suit.CLUBS, Card.Rank.ACE),
+                new Card(Card.Suit.HEARTS, Card.Rank.ACE),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.KING),
+                new Card(Card.Suit.SPADES, Card.Rank.QUEEN)
+        );
+
+        List<Card> sequence = Arrays.asList(
+                new Card(Card.Suit.SPADES, Card.Rank.NINE),
+                new Card(Card.Suit.SPADES, Card.Rank.TEN),
+                new Card(Card.Suit.SPADES, Card.Rank.JACK),
+                new Card(Card.Suit.SPADES, Card.Rank.QUEEN),
+                new Card(Card.Suit.SPADES, Card.Rank.KING)
+        );
+
+        Declaration fourAce = DeclarationsFinder.getDeclarations(handOfAce).get(0);
+        Declaration sequenceOfFive = DeclarationsFinder.getDeclarations(sequence).get(0);
+
+        assertEquals(1, fourAce.compareTo(sequenceOfFive), "Four Aces is a stronger declaration than any sequence of Five.");
+    }
+
+    @Test
+    void SequenceOfSixStrongerThanFourAces() {
+        List<Card> handOfAce = Arrays.asList(
+                new Card(Card.Suit.SPADES, Card.Rank.ACE),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.ACE),
+                new Card(Card.Suit.CLUBS, Card.Rank.ACE),
+                new Card(Card.Suit.HEARTS, Card.Rank.ACE),
+                new Card(Card.Suit.DIAMONDS, Card.Rank.KING),
+                new Card(Card.Suit.SPADES, Card.Rank.QUEEN)
+        );
+
+        List<Card> sequence = Arrays.asList(
+                new Card(Card.Suit.SPADES, Card.Rank.EIGHT),
+                new Card(Card.Suit.SPADES, Card.Rank.NINE),
+                new Card(Card.Suit.SPADES, Card.Rank.TEN),
+                new Card(Card.Suit.SPADES, Card.Rank.JACK),
+                new Card(Card.Suit.SPADES, Card.Rank.QUEEN),
+                new Card(Card.Suit.SPADES, Card.Rank.KING)
+        );
+
+        Declaration fourAce = DeclarationsFinder.getDeclarations(handOfAce).get(0);
+        Declaration sequenceOfSix = DeclarationsFinder.getDeclarations(sequence).get(0);
+
+        assertEquals(-1, fourAce.compareTo(sequenceOfSix), "A sequence of six is stronger than four Aces.");
     }
 }

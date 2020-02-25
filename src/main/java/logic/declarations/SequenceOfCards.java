@@ -2,20 +2,21 @@ package logic.declarations;
 
 import logic.deckofcards.Card;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class SequenceOfCards implements Declaration {
-
-    private String name;
-    private int points;
-    private List<Card> cards;
+public class SequenceOfCards extends Declaration {
 
     public SequenceOfCards(List<Card> cards) {
         this.cards = cards;
         this.cards.sort(Comparator.comparing(Card::getRank));
 
         switch (cards.size()) {
+            case 2:
+                this.name = "Bella";
+                this.points = 20;
+                break;
             case 3:
                 this.name = "Tart";
                 this.points = 20;
@@ -35,28 +36,14 @@ public class SequenceOfCards implements Declaration {
         }
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public int getPoints() {
-        return points;
-    }
 
     @Override
     public Card.Rank getHighestRank() {
-        Card highestCard = cards.get(cards.size() - 1);
-        return highestCard.getRank();
+        return getHighestCard().getRank();
     }
 
     @Override
-    public String toString() {
-        return "SequenceOfCards{" +
-                "name='" + name + '\'' +
-                ", points=" + points +
-                ", cards=" + cards +
-                '}';
+    public Card getHighestCard() {
+        return Collections.max(cards);
     }
 }

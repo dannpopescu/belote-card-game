@@ -2,13 +2,40 @@ package logic.declarations;
 
 import logic.deckofcards.Card;
 
-public interface Declaration {
+import java.util.List;
 
-    String getName();
+public abstract class Declaration implements Comparable<Declaration> {
 
-    int getPoints();
+    protected String name;
+    protected int points;
+    protected List<Card> cards;
 
-    Card.Rank getHighestRank();
+    public String getName() {
+        return name;
+    }
 
+    public int getPoints() {
+        return points;
+    }
 
+    public int getMatchPoints() {
+        return points / 10;
+    }
+
+    public abstract Card.Rank getHighestRank();
+
+    public abstract Card getHighestCard();
+
+    public String toString() {
+        return name + " {cards=" + cards + "}";
+    }
+
+    @Override
+    public int compareTo(Declaration o) {
+        if (points == o.points) {
+            return getHighestRank().compareTo(o.getHighestRank());
+        } else {
+            return Integer.compare(points, o.points);
+        }
+    }
 }
