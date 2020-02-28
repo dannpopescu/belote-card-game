@@ -1,6 +1,6 @@
-package ui;
+package com.danpopescu.belote.cli;
 
-import logic.Player;
+import com.danpopescu.belote.game.Player;
 
 import java.util.List;
 

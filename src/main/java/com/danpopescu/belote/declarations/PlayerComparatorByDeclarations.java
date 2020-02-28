@@ -1,6 +1,6 @@
-package logic.declarations;
+package com.danpopescu.belote.declarations;
 
-import logic.Player;
+import com.danpopescu.belote.game.Player;
 
 import java.util.Comparator;
 

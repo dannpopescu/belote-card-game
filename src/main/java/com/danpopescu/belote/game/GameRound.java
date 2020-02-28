@@ -1,15 +1,12 @@
-package logic;
+package com.danpopescu.belote.game;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import logic.deckofcards.Card;
-import logic.deckofcards.Deck;
-import logic.declarations.Declaration;
-import logic.declarations.DeclarationsFinder;
-import logic.declarations.PlayerComparatorByDeclarations;
-import ui.CollectedCardsTableGenerator;
-import ui.ConsoleColors;
-import ui.HandTableGenerator;
+import com.danpopescu.belote.deck.Card;
+import com.danpopescu.belote.deck.Deck;
+import com.danpopescu.belote.declarations.DeclarationsFinder;
+import com.danpopescu.belote.declarations.PlayerComparatorByDeclarations;
+import com.danpopescu.belote.cli.CollectedCardsTableGenerator;
+import com.danpopescu.belote.cli.ConsoleColors;
+import com.danpopescu.belote.cli.HandTableGenerator;
 
 import java.util.*;
 

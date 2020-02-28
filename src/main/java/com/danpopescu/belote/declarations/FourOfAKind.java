@@ -1,6 +1,6 @@
-package logic.declarations;
+package com.danpopescu.belote.declarations;
 
-import logic.deckofcards.Card;
+import com.danpopescu.belote.deck.Card;
 
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +9,7 @@ public class FourOfAKind extends Declaration {
 
     public FourOfAKind(List<Card> cards) {
         if (!isFourOfAKind(cards)) {
-            throw new IllegalArgumentException("The given list does not contain four cards of the same kind.");
+            throw new IllegalArgumentException("The given list does not contain four cards of the same rank.");
         }
 
         this.cards = cards;

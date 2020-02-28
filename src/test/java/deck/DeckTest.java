@@ -1,5 +1,7 @@
-package logic.deckofcards;
+package deck;
 
+import com.danpopescu.belote.deck.Card;
+import com.danpopescu.belote.deck.Deck;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

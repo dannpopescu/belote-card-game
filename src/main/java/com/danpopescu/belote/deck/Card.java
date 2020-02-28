@@ -1,11 +1,11 @@
-package logic.deckofcards;
+package com.danpopescu.belote.deck;
 
-import ui.ConsoleColors;
+import com.danpopescu.belote.cli.ConsoleColors;
 
 public class Card implements Comparable<Card> {
 
-    private Suit suit;
-    private Rank rank;
+    private final Suit suit;
+    private final Rank rank;
     private int points;
 
 

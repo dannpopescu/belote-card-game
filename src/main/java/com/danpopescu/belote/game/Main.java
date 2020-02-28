@@ -1,6 +1,6 @@
-package com.danpopescu;
+package com.danpopescu.belote.game;
 
-import logic.Game;
+import com.danpopescu.belote.game.Game;
 import java.util.List;
 
 

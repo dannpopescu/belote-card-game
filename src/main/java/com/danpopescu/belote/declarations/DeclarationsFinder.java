@@ -1,6 +1,6 @@
-package logic.declarations;
+package com.danpopescu.belote.declarations;
 
-import logic.deckofcards.Card;
+import com.danpopescu.belote.deck.Card;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ public class DeclarationsFinder {
      * A valid declaration is four cards of the same rank or a
      * sequence of cards of the same suit with the minimum length of 3 cards.
      * @param handOfCards a list of cards that a player holds
-     * @return a list of IDeclaration references
+     * @return a list of Declaration references
      */
     public static List<Declaration> getDeclarations(List<Card> handOfCards) {
         List<Declaration> declarations = new ArrayList<>();

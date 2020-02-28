@@ -1,8 +1,8 @@
-package logic;
+package com.danpopescu.belote.game;
 
-import logic.deckofcards.Card;
-import logic.declarations.Declaration;
-import logic.declarations.DeclarationsFinder;
+import com.danpopescu.belote.deck.Card;
+import com.danpopescu.belote.declarations.Declaration;
+import com.danpopescu.belote.declarations.DeclarationsFinder;
 
 import java.util.*;
 

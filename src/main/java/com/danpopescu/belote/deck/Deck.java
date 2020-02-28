@@ -1,4 +1,4 @@
-package logic.deckofcards;
+package com.danpopescu.belote.deck;
 
 import java.util.*;
 

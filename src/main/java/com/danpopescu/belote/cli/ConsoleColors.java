@@ -1,4 +1,4 @@
-package ui;
+package com.danpopescu.belote.cli;
 
 public class ConsoleColors {
     // Reset

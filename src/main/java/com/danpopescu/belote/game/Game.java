@@ -1,6 +1,6 @@
-package logic;
+package com.danpopescu.belote.game;
 
-import logic.deckofcards.Deck;
+import com.danpopescu.belote.deck.Deck;
 
 
 import java.util.*;

@@ -1,6 +1,8 @@
-package logic.declarations;
+package declarations;
 
-import logic.deckofcards.Card;
+import com.danpopescu.belote.deck.Card;
+import com.danpopescu.belote.declarations.Declaration;
+import com.danpopescu.belote.declarations.DeclarationsFinder;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

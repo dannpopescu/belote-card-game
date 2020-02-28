@@ -1,6 +1,6 @@
-package logic.declarations;
+package com.danpopescu.belote.declarations;
 
-import logic.deckofcards.Card;
+import com.danpopescu.belote.deck.Card;
 
 import java.util.Collections;
 import java.util.Comparator;
