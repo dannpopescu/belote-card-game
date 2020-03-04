@@ -6,9 +6,15 @@ import java.util.List;
 
 public abstract class Declaration implements Comparable<Declaration> {
 
-    protected String name;
-    protected int points;
-    protected List<Card> cards;
+    private String name;
+    private int points;
+    private List<Card> cards;
+
+    public Declaration(String name, int points, List<Card> cards) {
+        this.name = name;
+        this.points = points;
+        this.cards = cards;
+    }
 
     public String getName() {
         return name;
@@ -25,6 +31,10 @@ public abstract class Declaration implements Comparable<Declaration> {
     public abstract Card.Rank getHighestRank();
 
     public abstract Card getHighestCard();
+
+    List<Card> getCards() {
+        return cards;
+    }
 
     public String toString() {
         return name + " {cards=" + cards + "}";

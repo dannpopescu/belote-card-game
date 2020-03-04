@@ -8,34 +8,22 @@ import java.util.List;
 
 public class SequenceOfCards extends Declaration {
 
-    public SequenceOfCards(List<Card> cards) {
-        this.cards = cards;
-        this.cards.sort(Comparator.comparing(Card::getRank));
-
-        switch (cards.size()) {
-            case 2:
-                this.name = "Bella";
-                this.points = 20;
-                break;
-            case 3:
-                this.name = "Tart";
-                this.points = 20;
-                break;
-            case 4:
-                this.name = "Jumatate de suta";
-                this.points = 50;
-                break;
-            case 5:
-                this.name = "O suta";
-                this.points = 100;
-                break;
-            case 6: case 7: case 8:
-                this.name = "O suta cincizeci";
-                this.points = 150;
-                break;
-        }
+    private SequenceOfCards(String name, int points, List<Card> cards) {
+        super(name, points, cards);
     }
 
+    public static SequenceOfCards createSequenceOfCards(List<Card> cards) {
+        cards.sort(Comparator.comparing(Card::getRank));
+
+        switch (cards.size()) {
+            case 2: return new SequenceOfCards("Bella", 20, cards);
+            case 3: return new SequenceOfCards("Tart", 20, cards);
+            case 4: return new SequenceOfCards("Jumatate de suta", 50, cards);
+            case 5: return new SequenceOfCards("O suta", 100, cards);
+            case 6: case 7: case 8: return new SequenceOfCards("O suta cincizeci", 150, cards);
+            default: return null;
+        }
+    }
 
     @Override
     public Card.Rank getHighestRank() {
@@ -44,6 +32,6 @@ public class SequenceOfCards extends Declaration {
 
     @Override
     public Card getHighestCard() {
-        return Collections.max(cards);
+        return Collections.max(getCards());
     }
 }

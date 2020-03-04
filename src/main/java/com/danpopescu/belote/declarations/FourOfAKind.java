@@ -7,50 +7,29 @@ import java.util.List;
 
 public class FourOfAKind extends Declaration {
 
-    public FourOfAKind(List<Card> cards) {
+    private FourOfAKind(String name, int points, List<Card> cards) {
+        super(name, points, cards);
+    }
+
+    public static FourOfAKind createFourOfAKind(List<Card> cards) {
         if (!isFourOfAKind(cards)) {
             throw new IllegalArgumentException("The given list does not contain four cards of the same rank.");
         }
 
-        this.cards = cards;
-
         switch (cards.get(0).getRank()) {
-            case JACK:
-                this.name = "Four Jacks";
-                this.points = 200;
-                break;
-            case NINE:
-                this.name = "Four Nines";
-                this.points = 140;
-                break;
-            case ACE:
-                this.name = "Four Aces";
-                this.points = 100;
-                break;
-            case TEN:
-                this.name = "Four Tens";
-                this.points = 100;
-                break;
-            case KING:
-                this.name = "Four Kings";
-                this.points = 100;
-                break;
-            case QUEEN:
-                this.name = "Four Queens";
-                this.points = 100;
-                break;
-            case EIGHT:
-                this.name = "Four Eights";
-                this.points = 0;
-                break;
-            case SEVEN:
-                this.name = "Four Sevens";
-                this.points = 0;
-                break;
+            case  JACK: return new FourOfAKind("Four Jacks", 200, cards);
+            case  NINE: return new FourOfAKind("Four Nines", 140, cards);
+            case   ACE: return new FourOfAKind("Four Aces", 100, cards);
+            case   TEN: return new FourOfAKind("Four Tens", 100, cards);
+            case  KING: return new FourOfAKind("Four Kings", 100, cards);
+            case QUEEN: return new FourOfAKind("Four Queens", 100, cards);
+            case EIGHT: return new FourOfAKind("Four Eights", 0, cards);
+            case SEVEN: return new FourOfAKind("Four Sevens", 0, cards);
+            default:    return null;
         }
     }
 
-    private boolean isFourOfAKind(List<Card> cards) {
+    private static boolean isFourOfAKind(List<Card> cards) {
         if (cards.size() != 4) {
             return false;
         }
@@ -67,11 +46,11 @@ public class FourOfAKind extends Declaration {
 
     @Override
     public Card.Rank getHighestRank() {
-        return cards.get(0).getRank();
+        return getCards().get(0).getRank();
     }
 
     @Override
     public Card getHighestCard() {
-        return Collections.max(cards);
+        return Collections.max(getCards());
     }
 }

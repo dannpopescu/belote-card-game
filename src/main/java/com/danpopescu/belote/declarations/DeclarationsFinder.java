@@ -41,7 +41,7 @@ public class DeclarationsFinder {
         );
 
         if (handOfCards.containsAll(bellaCards)) {
-            return new SequenceOfCards(bellaCards);
+            return SequenceOfCards.createSequenceOfCards(bellaCards);
         }
 
         return null;
@@ -71,7 +71,7 @@ public class DeclarationsFinder {
                 .collect(Collectors.groupingBy(Card::getRank, Collectors.toList()));
 
         return validFourOfAKind.values().stream()
-                .map(FourOfAKind::new)
+                .map(FourOfAKind::createFourOfAKind)
                 .collect(Collectors.toList());
 
 //        return ranksWithFrequencyFour.stream()
@@ -105,7 +105,7 @@ public class DeclarationsFinder {
         }
 
         return validSequencesOfCardsAsLists.stream()
-                .map(SequenceOfCards::new)
+                .map(SequenceOfCards::createSequenceOfCards)
                 .collect(Collectors.toList());
     }
 
