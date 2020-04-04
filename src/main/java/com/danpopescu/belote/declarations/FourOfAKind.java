@@ -2,8 +2,10 @@ package com.danpopescu.belote.declarations;
 
 import com.danpopescu.belote.deck.Card;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FourOfAKind extends Declaration {
 
@@ -34,23 +36,10 @@ public class FourOfAKind extends Declaration {
             return false;
         }
 
-        Card.Rank firstRank = cards.get(0).getRank();
-        for (Card card : cards) {
-            if (card.getRank() != firstRank) {
-                return false;
-            }
-        }
+        Set<Card.Rank> ranks = cards.stream()
+                .map(Card::getRank)
+                .collect(Collectors.toCollection(HashSet::new));
 
-        return true;
-    }
-
-    @Override
-    public Card.Rank getHighestRank() {
-        return getCards().get(0).getRank();
-    }
-
-    @Override
-    public Card getHighestCard() {
-        return Collections.max(getCards());
+        return ranks.size() == 1;
     }
 }

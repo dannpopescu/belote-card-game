@@ -2,7 +2,6 @@ package com.danpopescu.belote.declarations;
 
 import com.danpopescu.belote.deck.Card;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,15 +22,5 @@ public class SequenceOfCards extends Declaration {
             case 6: case 7: case 8: return new SequenceOfCards("O suta cincizeci", 150, cards);
             default: return null;
         }
-    }
-
-    @Override
-    public Card.Rank getHighestRank() {
-        return getHighestCard().getRank();
-    }
-
-    @Override
-    public Card getHighestCard() {
-        return Collections.max(getCards());
     }
 }

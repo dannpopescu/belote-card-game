@@ -2,6 +2,7 @@ package com.danpopescu.belote.declarations;
 
 import com.danpopescu.belote.deck.Card;
 
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Declaration implements Comparable<Declaration> {
@@ -10,7 +11,7 @@ public abstract class Declaration implements Comparable<Declaration> {
     private int points;
     private List<Card> cards;
 
-    public Declaration(String name, int points, List<Card> cards) {
+    protected Declaration(String name, int points, List<Card> cards) {
         this.name = name;
         this.points = points;
         this.cards = cards;
@@ -28,13 +29,9 @@ public abstract class Declaration implements Comparable<Declaration> {
         return points / 10;
     }
 
-    public abstract Card.Rank getHighestRank();
+    public Card.Rank getHighestRank() { return getHighestCard().getRank(); }
 
-    public abstract Card getHighestCard();
-
-    List<Card> getCards() {
-        return cards;
-    }
+    public Card getHighestCard() { return Collections.max(cards); }
 
     public String toString() {
         return name + " {cards=" + cards + "}";
