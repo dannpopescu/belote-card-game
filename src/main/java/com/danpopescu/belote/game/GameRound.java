@@ -50,9 +50,10 @@ public class GameRound {
     }
 
     /**
-     * Play a game round.
-     * A game round starts with dealing the cards, picking the trump suit,
-     * playing all the cards in the hand and calculating the round score.
+     * Play a game round
+     *
+     * Note: A game round starts with dealing the cards, picking the trump suit,
+     *       playing all the cards in the hand and calculating the round score.
      */
     public void playRound() {
         nextDealer();
@@ -90,7 +91,8 @@ public class GameRound {
 
 
     /**
-     * Update the dealer.
+     * Update the dealer
+     *
      * Note: dealer is the last player in the players list
      */
     private void nextDealer() {
@@ -142,11 +144,11 @@ public class GameRound {
     /**
      * Prompt the players to choose the trump suit
      *
-     * Bidding is done in two rounds:
-     *   1. the top card in the deck is turned face up and every player decides if he wants
-     *      to receive the card and set its suit as trump suit
-     *   2. if the first round is unsuccessful, every player decides if he wants to choose
-     *      a custom suit or to pass
+     * Note: Bidding is done in two rounds:
+     *         1. the top card in the deck is turned face up and every player decides if he wants
+     *            to receive the card and set its suit as trump suit
+     *         2. if the first round is unsuccessful, every player decides if he wants to choose
+     *            a custom suit or to pass
      */
     private void pickTrumpSuit() {
         Card topCard = deck.peekCard();
