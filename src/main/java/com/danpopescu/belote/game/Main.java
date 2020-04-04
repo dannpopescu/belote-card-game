@@ -9,6 +9,5 @@ public class Main {
         List<String> playerNames = List.of("Dan", "Igor", "Vadim", "Sandu");
         Game belote = new Game(playerNames);
         belote.playGame();
-
     }
 }

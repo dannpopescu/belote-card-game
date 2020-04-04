@@ -2,8 +2,9 @@ package com.danpopescu.belote.game;
 
 import com.danpopescu.belote.deck.Deck;
 
+import java.util.LinkedList;
+import java.util.List;
 
-import java.util.*;
 
 public class Game {
 
@@ -16,10 +17,6 @@ public class Game {
      * List of players playing the current game
      */
     private List<Player> players = new LinkedList<>();
-
-
-    private static Scanner scanner = new Scanner(System.in);
-
 
     /**
      * Creates a new instance of the game
